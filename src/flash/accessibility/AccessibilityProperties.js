@@ -1,0 +1,4 @@
+/**
+ * @constructor
+ */
+var AccessibilityProperties = function () {};

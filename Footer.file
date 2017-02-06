@@ -1,0 +1,3 @@
+        window.swf2js = new Swf2js();
+    })(window);
+}

@@ -1,0 +1,24 @@
+{
+  "name": "swf2js",
+  "version": "0.7.8",
+  "description": "Flash™ runtime written in pure JavaScript.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "swf",
+    "flash"
+  ],
+  "author": "Toshiyuki Ienaga",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.18.5",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^2.0.0"
+  }
+}
