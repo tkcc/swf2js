@@ -20,24 +20,12 @@ BitmapFilter.prototype.filterOperation = function (inner, knockout, hideObject)
 {
     var operation = "source-over";
     if (knockout) {
-        if (inner) {
-            operation = "source-in";
-        } else {
-            operation = "source-out";
-        }
+        operation = (inner) ? "source-in": "source-out";
     } else {
         if (hideObject) {
-            if (inner) {
-                operation = "source-in";
-            } else {
-                operation = "copy";
-            }
+            operation = (inner) ? "source-in" : "copy";
         } else {
-            if (inner) {
-                operation = "source-atop";
-            } else {
-                operation = "destination-over";
-            }
+            operation = (inner) ? "source-atop" : "destination-over";
         }
     }
     return operation;
@@ -56,32 +44,43 @@ BitmapFilter.prototype.coatOfColor = function (ctx, color, inner, strength)
     var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     var i = 0;
-    var pxData = imgData.data;
     var R = color.R|0;
     var G = color.G|0;
     var B = color.B|0;
+
+    var pxData = imgData.data;
     var length = pxData.length|0;
 
-    while (i < length) {
-        var aKey  = (i + 3)|0;
-        var alpha = pxData[aKey]|0;
-        if (!inner) {
+    var aKey, alpha;
+    if (!inner) {
+        while (i < length) {
+            aKey  = (i + 3)|0;
+            alpha = pxData[aKey]|0;
             if (alpha !== 0) {
-                pxData[i]     = R|0;
+                pxData[i    ] = R|0;
                 pxData[i + 1] = G|0;
                 pxData[i + 2] = B|0;
                 pxData[aKey]  = alpha|0;
             }
-        } else {
-            if (alpha !== 255) {
-                pxData[i]     = R|0;
-                pxData[i + 1] = G|0;
-                pxData[i + 2] = B|0;
-                pxData[aKey]  = 0 | 255 - alpha|0;
-            }
-        }
 
-        i = (i + 4)|0;
+            i = (i + 4)|0;
+        }
+    } else {
+        while (i < length) {
+            aKey  = (i + 3)|0;
+            alpha = pxData[aKey]|0;
+
+            if (alpha !== 255) {
+                pxData[i    ] = R | 0;
+                pxData[i + 1] = G | 0;
+                pxData[i + 2] = B | 0;
+                pxData[aKey] = (255 - alpha) | 0;
+            } else {
+                pxData[aKey] = 0;
+            }
+
+            i = (i + 4)|0;
+        }
     }
 
     ctx.putImageData(imgData, 0, 0);
@@ -95,6 +94,9 @@ BitmapFilter.prototype.coatOfColor = function (ctx, color, inner, strength)
 
     return ctx;
 };
+
+
+
 
 /**
  * clone
@@ -110,7 +112,7 @@ BitmapFilter.prototype.clone = function ()
         args[args.length] = this[prop];
     }
 
-    var type   = this.filterId;
+    var type   = this.filterId|0;
     var filter = this;
     switch (type) {
         case 0: // DropShadowFilter

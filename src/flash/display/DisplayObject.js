@@ -2126,11 +2126,12 @@ DisplayObject.prototype.renderFilter = function (ctx, matrix, colorTransform, st
     if (!cache) {
         var fLength = filters.length|0;
         var i = 0;
+        cache = ctx;
         while (i < fLength) {
             var filter = filters[i];
             i = (i + 1)|0;
 
-            cache = filter.render(ctx, matrix, colorTransform, stage);
+            cache = filter.render(cache, matrix, colorTransform, stage);
         }
 
         this._filterCacheKey = cacheKey;

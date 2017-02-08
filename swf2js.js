@@ -2175,24 +2175,12 @@ BitmapFilter.prototype.filterOperation = function (inner, knockout, hideObject)
 {
     var operation = "source-over";
     if (knockout) {
-        if (inner) {
-            operation = "source-in";
-        } else {
-            operation = "source-out";
-        }
+        operation = (inner) ? "source-in": "source-out";
     } else {
         if (hideObject) {
-            if (inner) {
-                operation = "source-in";
-            } else {
-                operation = "copy";
-            }
+            operation = (inner) ? "source-in" : "copy";
         } else {
-            if (inner) {
-                operation = "source-atop";
-            } else {
-                operation = "destination-over";
-            }
+            operation = (inner) ? "source-atop" : "destination-over";
         }
     }
     return operation;
@@ -2211,32 +2199,43 @@ BitmapFilter.prototype.coatOfColor = function (ctx, color, inner, strength)
     var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     var i = 0;
-    var pxData = imgData.data;
     var R = color.R|0;
     var G = color.G|0;
     var B = color.B|0;
+
+    var pxData = imgData.data;
     var length = pxData.length|0;
 
-    while (i < length) {
-        var aKey  = (i + 3)|0;
-        var alpha = pxData[aKey]|0;
-        if (!inner) {
+    var aKey, alpha;
+    if (!inner) {
+        while (i < length) {
+            aKey  = (i + 3)|0;
+            alpha = pxData[aKey]|0;
             if (alpha !== 0) {
-                pxData[i]     = R|0;
+                pxData[i    ] = R|0;
                 pxData[i + 1] = G|0;
                 pxData[i + 2] = B|0;
                 pxData[aKey]  = alpha|0;
             }
-        } else {
-            if (alpha !== 255) {
-                pxData[i]     = R|0;
-                pxData[i + 1] = G|0;
-                pxData[i + 2] = B|0;
-                pxData[aKey]  = 0 | 255 - alpha|0;
-            }
-        }
 
-        i = (i + 4)|0;
+            i = (i + 4)|0;
+        }
+    } else {
+        while (i < length) {
+            aKey  = (i + 3)|0;
+            alpha = pxData[aKey]|0;
+
+            if (alpha !== 255) {
+                pxData[i    ] = R | 0;
+                pxData[i + 1] = G | 0;
+                pxData[i + 2] = B | 0;
+                pxData[aKey] = (255 - alpha) | 0;
+            } else {
+                pxData[aKey] = 0;
+            }
+
+            i = (i + 4)|0;
+        }
     }
 
     ctx.putImageData(imgData, 0, 0);
@@ -2250,6 +2249,9 @@ BitmapFilter.prototype.coatOfColor = function (ctx, color, inner, strength)
 
     return ctx;
 };
+
+
+
 
 /**
  * clone
@@ -2265,7 +2267,7 @@ BitmapFilter.prototype.clone = function ()
         args[args.length] = this[prop];
     }
 
-    var type   = this.filterId;
+    var type   = this.filterId|0;
     var filter = this;
     switch (type) {
         case 0: // DropShadowFilter
@@ -2304,80 +2306,34 @@ var BevelFilter = function ()
     BitmapFilter.call(this);
 
     this.filterId       = 3;
-    this.distance       = 4;
-    this.angle          = 45;
-    this.highlightColor = 0xffffff;
-    this.highlightAlpha = 1;
-    this.shadowColor    = 0x000000;
-    this.shadowAlpha    = 1;
-    this.blurX          = 4;
-    this.blurY          = 4;
-    this.strength       = 1;
-    this.quality        = 1;
-    this.type           = "inner";
-    this.knockout       = false;
+
+    // default
+    this._distance       = 4;
+    this._angle          = 45;
+    this._highlightColor = 0xffffff;
+    this._highlightAlpha = 1;
+    this._shadowColor    = 0x000000;
+    this._shadowAlpha    = 1;
+    this._blurX          = 4;
+    this._blurY          = 4;
+    this._strength       = 1;
+    this._quality        = 1;
+    this._type           = "inner";
+    this._knockout       = false;
 
     var arg = arguments;
-
-    var distance = arg[0]|0;
-    if (!this.$isNaN(distance)) {
-        this.distance = distance;
-    }
-
-    var angle = +arg[1];
-    if (!this.$isNaN(angle) && 0 <= angle && 360 >= angle) {
-        this.angle = angle;
-    }
-
-    var highlightColor = this.toColorInt(arg[2]);
-    if (!this.$isNaN(highlightColor)) {
-        this.highlightColor = highlightColor;
-    }
-
-    var highlightAlpha = +arg[3];
-    if (!this.$isNaN(highlightAlpha) && 0 <= highlightAlpha && 1 >= highlightAlpha) {
-        this.highlightAlpha = highlightAlpha;
-    }
-
-    var shadowColor = this.toColorInt(arg[4]);
-    if (!this.$isNaN(shadowColor)) {
-        this.shadowColor = shadowColor;
-    }
-
-    var shadowAlpha = +arg[5];
-    if (!this.$isNaN(shadowAlpha) && 0 <= shadowAlpha && 1 >= shadowAlpha) {
-        this.shadowAlpha = shadowAlpha;
-    }
-
-    var blurX = arg[6]|0;
-    if (!this.$isNaN(blurX) && 0 <= blurX && 255 >= blurX) {
-        this.blurX = blurX;
-    }
-
-    var blurY = arg[7]|0;
-    if (!this.$isNaN(blurY) && 0 <= blurY && 255 >= blurY) {
-        this.blurY = blurY;
-    }
-
-    var strength = +arg[8];
-    if (!this.$isNaN(strength) && 0 <= strength && 255 >= strength) {
-        this.strength = strength;
-    }
-
-    var quality = arg[9]|0;
-    if (!this.$isNaN(quality) && 1 <= quality && 15 >= quality) {
-        this.quality = quality;
-    }
-
-    var type = arg[10];
-    if (typeof type === "string") {
-        this.type = type;
-    }
-
-    var knockout = arg[11];
-    if (typeof knockout === "boolean") {
-        this.knockout = knockout;
-    }
+    this.distance       = arg[0];
+    this.angle          = arg[1];
+    this.highlightColor = arg[2];
+    this.highlightAlpha = arg[3];
+    this.shadowColor    = arg[4];
+    this.shadowAlpha    = arg[5];
+    this.blurX          = arg[6];
+    this.blurY          = arg[7];
+    this.strength       = arg[8];
+    this.quality        = arg[9];
+    this.type           = arg[10];
+    this.knockout       = arg[11];
 };
 
 /**
@@ -2388,6 +2344,141 @@ BevelFilter.prototype = Object.create(BitmapFilter.prototype);
 BevelFilter.prototype.constructor = BevelFilter;
 
 /**
+ * properties
+ */
+Object.defineProperties(BevelFilter.prototype, {
+    distance: {
+        get: function () {
+            return this._distance;
+        },
+        set: function (distance) {
+            if (!this.$isNaN(distance)) {
+                this._distance = distance;
+            }
+        }
+    },
+    angle: {
+        get: function () {
+            return this._angle;
+        },
+        set: function (angle) {
+            if (!this.$isNaN(angle) && 0 <= angle && 360 >= angle) {
+                this._angle = angle % 360;
+            }
+
+        }
+    },
+    highlightColor: {
+        get: function () {
+            return this._highlightColor;
+        },
+        set: function (highlightColor) {
+            if (highlightColor) {
+                this._highlightColor = this.$toColorInt(highlightColor);
+            }
+        }
+    },
+    highlightAlpha: {
+        get: function () {
+            return this._highlightAlpha;
+        },
+        set: function (highlightAlpha) {
+            if (!this.$isNaN(highlightAlpha) && 0 <= highlightAlpha && 1 >= highlightAlpha) {
+                this._highlightAlpha = highlightAlpha;
+            }
+        }
+    },
+    shadowColor: {
+        get: function () {
+            return this._shadowColor;
+        },
+        set: function (shadowColor) {
+            if (!shadowColor) {
+                this._shadowColor = this.$toColorInt(shadowColor);
+            }
+        }
+    },
+    shadowAlpha: {
+        get: function () {
+            return this._shadowAlpha;
+        },
+        set: function (shadowAlpha) {
+            if (!this.$isNaN(shadowAlpha) && 0 <= shadowAlpha && 1 >= shadowAlpha) {
+                this._shadowAlpha = shadowAlpha;
+            }
+        }
+    },
+    blurX: {
+        get: function () {
+            return this._blurX;
+        },
+        set: function (blurX) {
+            if (!this.$isNaN(blurX) && 0 <= blurX && 256 > blurX) {
+                this._blurX = blurX;
+            }
+        }
+    },
+    blurY: {
+        get: function () {
+            return this._blurY;
+        },
+        set: function (blurY) {
+            if (!this.$isNaN(blurY) && 0 <= blurY && 256 > blurY) {
+                this._blurY = blurY;
+            }
+        }
+    },
+    strength: {
+        get: function () {
+            return this._strength;
+        },
+        set: function (strength) {
+            if (!this.$isNaN(strength) && 0 <= strength && 256 >= strength) {
+                this._strength = strength;
+            }
+        }
+    },
+    quality: {
+        get: function () {
+            return this._quality;
+        },
+        set: function (quality) {
+            if (!this.$isNaN(quality) && 0 < quality && 16 > quality) {
+                this._quality = quality;
+            }
+        }
+    },
+    type: {
+        get: function () {
+            return this._type;
+        },
+        set: function (type) {
+            if (typeof type === "string") {
+                switch (type) {
+                    case "inner":
+                    case "outer":
+                    case "full":
+                        this._type = type;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    },
+    knockout: {
+        get: function () {
+            return this._knockout;
+        },
+        set: function (knockout) {
+            if (typeof knockout === "boolean") {
+                this._knockout = knockout;
+            }
+        }
+    }
+});
+
+/**
  * @param cache
  * @param matrix
  * @param colorTransform
@@ -2396,109 +2487,105 @@ BevelFilter.prototype.constructor = BevelFilter;
  */
 BevelFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
-    var _this = this;
-    var distance = _this.distance;
-    var angle = _this.angle;
-    var shadowColor = _this.shadowColor;
-    var shadowAlpha = _this.shadowAlpha;
-    var highlightColor = _this.highlightColor;
-    var highlightAlpha = _this.highlightAlpha;
-    var blurX = _this.blurX;
-    var blurY = _this.blurY;
-    var strength = _this.strength;
-    var quality = _this.quality;
-    var knockout = _this.knockout;
-    var r = angle * _PI / 180;
     var filterColor, color;
-    var type = _this.type;
+
+    var angle          = this.angle;
+    var shadowColor    = this.shadowColor;
+    var shadowAlpha    = this.shadowAlpha;
+    var highlightColor = this.highlightColor;
+    var highlightAlpha = this.highlightAlpha;
+    var blurX          = this.blurX;
+    var blurY          = this.blurY;
+    var strength       = this.strength;
+    var quality        = this.quality;
+    var knockout       = this.knockout;
+    var type           = this.type;
+
+    var r = +(angle * this.$PI / 180);
 
     // blur
     var blurFilter = new BlurFilter(blurX, blurY, quality);
-    var ctx = blurFilter.render(cache, matrix, colorTransform, stage);
-    var canvas = ctx.canvas;
-    var _offsetX = ctx._offsetX;
-    var _offsetY = ctx._offsetY;
+    var ctx        = blurFilter.render(cache, matrix, colorTransform, stage);
+    var canvas     = ctx.canvas;
+    var _offsetX   = ctx._offsetX;
+    var _offsetY   = ctx._offsetY;
 
     // shadow
-    var shadowCanvas = cacheStore.getCanvas();
-    shadowCanvas.width = canvas.width;
-    shadowCanvas.height = canvas.height;
-    var shadowCtx = shadowCanvas.getContext("2d");
+    var shadowCanvas    = this.$cacheStore.getCanvas();
+    shadowCanvas.width  = canvas.width|0;
+    shadowCanvas.height = canvas.height|0;
+    var shadowCtx       = shadowCanvas.getContext("2d");
     shadowCtx.drawImage(canvas, 0, 0);
-    var intShadowColor = _this.toColorInt(shadowColor);
-    filterColor = _this.intToRGBA(intShadowColor);
-    color = _this.generateColorTransform(filterColor, colorTransform);
-    shadowCtx = _this.coatOfColor(shadowCtx, color, false, strength);
 
-    // shadow
-    var highlightCanvas = cacheStore.getCanvas();
-    highlightCanvas.width = canvas.width;
+    filterColor        = this.$intToRGBA(shadowColor);
+    color              = this.$generateColorTransform(filterColor, colorTransform);
+    shadowCtx          = this.coatOfColor(shadowCtx, color, false, strength);
+
+    // highlight
+    var highlightCanvas    = this.$cacheStore.getCanvas();
+    highlightCanvas.width  = canvas.width;
     highlightCanvas.height = canvas.height;
-    var highlightCtx = highlightCanvas.getContext("2d");
+    var highlightCtx       = highlightCanvas.getContext("2d");
     highlightCtx.drawImage(canvas, 0, 0);
-    var intHighlightColor = _this.toColorInt(highlightColor);
-    filterColor = _this.intToRGBA(intHighlightColor);
-    color = _this.generateColorTransform(filterColor, colorTransform);
-    highlightCtx = _this.coatOfColor(highlightCtx, color, false, strength);
 
-    var isInner = (type === "inner" || type === "full");
-    var isOuter = (type === "outer" || type === "full");
+    filterColor           = this.$intToRGBA(highlightColor);
+    color                 = this.$generateColorTransform(filterColor, colorTransform);
+    highlightCtx          = this.coatOfColor(highlightCtx, color, false, strength);
 
     var cacheOffsetX = cache._offsetX;
     var cacheOffsetY = cache._offsetY;
-    var synCanvas = cacheStore.getCanvas();
-    var width = canvas.width + cacheOffsetX;
-    var height = canvas.height + cacheOffsetY;
-    var ox = 0;
-    var oy = 0;
 
-    var scale = stage.getScale();
-    var x = _ceil(_cos(r) * distance * scale);
-    var y = _ceil(_sin(r) * distance * scale);
+    var width  = (canvas.width  + cacheOffsetX)|0;
+    var height = (canvas.height + cacheOffsetY)|0;
 
-    if (x !== 0) {
-        width += _abs(x);
-        if (x < 0) {
-            ox -= x;
-        }
-    }
+    var distance = this.distance;
+    var scale    = stage.getScale();
+    var x = this.$ceil(this.$cos(r) * distance * scale * stage.ratio)|0;
+    var y = this.$ceil(this.$sin(r) * distance * scale * stage.ratio)|0;
 
-    if (y !== 0) {
-        height += _abs(y);
-        if (y < 0) {
-            oy -= y;
-        }
-    }
+    var ox = _offsetX + this.$abs(x);
+    var oy = _offsetY + this.$abs(y);
 
-    synCanvas.width = width;
-    synCanvas.height = height;
-    var synCtx = synCanvas.getContext("2d");
+    width  = (width  + this.$abs(x) * 2)|0;
+    height = (height + this.$abs(y) * 2)|0;
+
+    var synCanvas    = this.$cacheStore.getCanvas();
+    synCanvas.width  = width|0;
+    synCanvas.height = height|0;
+    var synCtx       = synCanvas.getContext("2d");
+
     if (!knockout) {
-        synCtx.drawImage(cache.canvas, _offsetX + ox, _offsetY + oy);
+        synCtx.drawImage(cache.canvas, ox, oy);
     }
+
     if (strength < 1) {
-        synCtx.globalAlpha *= strength;
+        synCtx.globalAlpha = +(synCtx.globalAlpha * strength);
     }
-    synCtx._offsetX = cacheOffsetX + _offsetX;
-    synCtx._offsetY = cacheOffsetY + _offsetY;
 
-    var xorCanvas = cacheStore.getCanvas();
-    xorCanvas.width = width + _offsetX;
-    xorCanvas.height = height + _offsetY;
+    var xorCanvas = this.$cacheStore.getCanvas();
+    xorCanvas.width  = width|0;
+    xorCanvas.height = height|0;
+
     var xorCtx = xorCanvas.getContext("2d");
-
+    xorCtx.setTransform(1,0,0,1,this.$abs(x),this.$abs(y));
     xorCtx.globalCompositeOperation = "xor";
-    xorCtx.globalAlpha = highlightAlpha;
-    xorCtx.drawImage(highlightCtx.canvas, -x + ox, -y + oy);
-    xorCtx.globalAlpha = shadowAlpha;
-    xorCtx.drawImage(shadowCtx.canvas, x, y);
 
+    // highlight
+    xorCtx.globalAlpha = highlightAlpha;
+    xorCtx.drawImage(highlightCtx.canvas, cacheOffsetX - x, cacheOffsetY - y);
+
+    // shadow
+    xorCtx.globalAlpha = shadowAlpha;
+    xorCtx.drawImage(shadowCtx.canvas, cacheOffsetX + x, cacheOffsetY + y);
+
+    var isInner = (type === "inner" || type === "full");
+    var isOuter = (type === "outer" || type === "full");
     var operation;
     if (isInner && isOuter) {
         operation = "source-over";
     } else if (isInner) {
-        synCtx.drawImage(cache.canvas, _offsetX + ox, _offsetY + oy);
-        operation = _this.filterOperation(true, knockout);
+        synCtx.drawImage(cache.canvas, ox, oy);
+        operation = this.filterOperation(true, knockout);
     } else if (isOuter) {
         operation = "destination-over";
     }
@@ -2507,13 +2594,16 @@ BevelFilter.prototype.render = function (cache, matrix, colorTransform, stage)
     synCtx.drawImage(xorCtx.canvas, 0, 0);
     if (!isInner && isOuter && knockout) {
         synCtx.globalCompositeOperation = "destination-out";
-        synCtx.drawImage(cache.canvas, _offsetX + ox, _offsetY + oy);
+        synCtx.drawImage(cache.canvas, ox, oy);
     }
 
-    cacheStore.destroy(ctx);
-    cacheStore.destroy(highlightCtx);
-    cacheStore.destroy(shadowCtx);
-    cacheStore.destroy(xorCtx);
+    synCtx._offsetX = +(cacheOffsetX + ox);
+    synCtx._offsetY = +(cacheOffsetY + oy);
+
+    this.$cacheStore.destroy(ctx);
+    this.$cacheStore.destroy(highlightCtx);
+    this.$cacheStore.destroy(shadowCtx);
+    this.$cacheStore.destroy(xorCtx);
 
     return synCtx;
 };
@@ -2525,26 +2615,16 @@ var BlurFilter = function ()
     BitmapFilter.call(this);
 
     this.filterId = 1;
-    this.blurX    = 4;
-    this.blurY    = 4;
-    this.quality  = 1;
 
-    var arg = arguments;
+    // default
+    this._blurX    = 4;
+    this._blurY    = 4;
+    this._quality  = 1;
 
-    var blurX = +arg[0];
-    if (!this.$isNaN(blurX) && 0 <= blurX && 255 >= blurX) {
-        this.blurX = blurX;
-    }
-
-    var blurY = +arg[1];
-    if (!this.$isNaN(blurY) && 0 <= blurY && 255 >= blurY) {
-        this.blurY = blurY;
-    }
-
-    var quality = arg[2]|0;
-    if (!this.$isNaN(quality) && quality > 0) {
-        this.quality = quality;
-    }
+    var arg      = arguments;
+    this.blurX   = arg[0];
+    this.blurY   = arg[1];
+    this.quality = arg[2];
 };
 
 /**
@@ -2553,6 +2633,42 @@ var BlurFilter = function ()
  */
 BlurFilter.prototype = Object.create(BitmapFilter.prototype);
 BlurFilter.prototype.constructor = BlurFilter;
+
+/**
+ * properties
+ */
+Object.defineProperties(BlurFilter.prototype, {
+    blurX: {
+        get: function () {
+            return this._blurX;
+        },
+        set: function (blurX) {
+            if (!this.$isNaN(blurX) && 0 <= blurX && 256 > blurX) {
+                this._blurX = +blurX;
+            }
+        }
+    },
+    blurY: {
+        get: function () {
+            return this._blurY;
+        },
+        set: function (blurY) {
+            if (!this.$isNaN(blurY) && 0 <= blurY && 256 > blurY) {
+                this._blurY = +blurY;
+            }
+        }
+    },
+    quality: {
+        get: function () {
+            return this._quality;
+        },
+        set: function (quality) {
+            if (0 < quality && 16 > quality) {
+                this._quality = quality|0;
+            }
+        }
+    }
+});
 
 /**
  * @param cache
@@ -2571,8 +2687,8 @@ BlurFilter.prototype.render = function (cache, matrix, colorTransform, stage)
     var ctx = canvas.getContext("2d");
     ctx.drawImage(cacheCanvas, 0, 0);
 
-    ctx._offsetX = cache._offsetX;
-    ctx._offsetY = cache._offsetY;
+    ctx._offsetX = +cache._offsetX;
+    ctx._offsetY = +cache._offsetY;
 
     return this.executeFilter(ctx, stage);
 };
@@ -2584,28 +2700,20 @@ BlurFilter.prototype.render = function (cache, matrix, colorTransform, stage)
  */
 BlurFilter.prototype.executeFilter = function (ctx, stage)
 {
-    var _blurX = this.blurX|0;
-    var _blurY = this.blurY|0;
+    var _blurX = this.blurX;
+    var _blurY = this.blurY;
     if (!_blurX && !_blurY) {
         return ctx;
     }
 
-    if (_blurX <= 0) {
-        _blurX = 4;
-    }
-
-    if (_blurY <= 0) {
-        _blurY = 4;
-    }
+    var scale = stage.getScale();
 
     var _quality = this.quality|0;
-    var scale    = stage.getScale();
+    var STEP     = [0.5, 1.05, 1.35, 1.55, 1.75, 1.9, 2, 2.1, 2.2, 2.3, 2.5, 3, 3, 3.5, 3.5];
+    var stepNo   = STEP[_quality - 1] * 2;
 
-    var STEP   = [0.5, 1.05, 1.35, 1.55, 1.75, 1.9, 2, 2.1, 2.2, 2.3, 2.5, 3, 3, 3.5, 3.5];
-    var stepNo = STEP[_quality - 1];
-
-    var blurX = +this.$ceil(_blurX * stepNo * scale * this.$devicePixelRatio);
-    var blurY = +this.$ceil(_blurY * stepNo * scale * this.$devicePixelRatio);
+    var blurX = this.$ceil(_blurX * stepNo * scale * stage.ratio)|0;
+    var blurY = this.$ceil(_blurY * stepNo * scale * stage.ratio)|0;
 
     var canvas = ctx.canvas;
     var width  = this.$ceil(canvas.width  + (blurX * 2) + 1)|0;
@@ -2630,7 +2738,6 @@ BlurFilter.prototype.executeFilter = function (ctx, stage)
     var radiusY = (offsetY) >> 1;
 
     var MUL = [1, 171, 205, 293, 57, 373, 79, 137, 241, 27, 391, 357, 41, 19, 283, 265, 497, 469, 443, 421, 25, 191, 365, 349, 335, 161, 155, 149, 9, 278, 269, 261, 505, 245, 475, 231, 449, 437, 213, 415, 405, 395, 193, 377, 369, 361, 353, 345, 169, 331, 325, 319, 313, 307, 301, 37, 145, 285, 281, 69, 271, 267, 263, 259, 509, 501, 493, 243, 479, 118, 465, 459, 113, 446, 55, 435, 429, 423, 209, 413, 51, 403, 199, 393, 97, 3, 379, 375, 371, 367, 363, 359, 355, 351, 347, 43, 85, 337, 333, 165, 327, 323, 5, 317, 157, 311, 77, 305, 303, 75, 297, 294, 73, 289, 287, 71, 141, 279, 277, 275, 68, 135, 67, 133, 33, 262, 260, 129, 511, 507, 503, 499, 495, 491, 61, 121, 481, 477, 237, 235, 467, 232, 115, 457, 227, 451, 7, 445, 221, 439, 218, 433, 215, 427, 425, 211, 419, 417, 207, 411, 409, 203, 202, 401, 399, 396, 197, 49, 389, 387, 385, 383, 95, 189, 47, 187, 93, 185, 23, 183, 91, 181, 45, 179, 89, 177, 11, 175, 87, 173, 345, 343, 341, 339, 337, 21, 167, 83, 331, 329, 327, 163, 81, 323, 321, 319, 159, 79, 315, 313, 39, 155, 309, 307, 153, 305, 303, 151, 75, 299, 149, 37, 295, 147, 73, 291, 145, 289, 287, 143, 285, 71, 141, 281, 35, 279, 139, 69, 275, 137, 273, 17, 271, 135, 269, 267, 133, 265, 33, 263, 131, 261, 130, 259, 129, 257, 1];
-
     var SHG = [0, 9, 10, 11, 9, 12, 10, 11, 12, 9, 13, 13, 10, 9, 13, 13, 14, 14, 14, 14, 10, 13, 14, 14, 14, 13, 13, 13, 9, 14, 14, 14, 15, 14, 15, 14, 15, 15, 14, 15, 15, 15, 14, 15, 15, 15, 15, 15, 14, 15, 15, 15, 15, 15, 15, 12, 14, 15, 15, 13, 15, 15, 15, 15, 16, 16, 16, 15, 16, 14, 16, 16, 14, 16, 13, 16, 16, 16, 15, 16, 13, 16, 15, 16, 14, 9, 16, 16, 16, 16, 16, 16, 16, 16, 16, 13, 14, 16, 16, 15, 16, 16, 10, 16, 15, 16, 14, 16, 16, 14, 16, 16, 14, 16, 16, 14, 15, 16, 16, 16, 14, 15, 14, 15, 13, 16, 16, 15, 17, 17, 17, 17, 17, 17, 14, 15, 17, 17, 16, 16, 17, 16, 15, 17, 16, 17, 11, 17, 16, 17, 16, 17, 16, 17, 17, 16, 17, 17, 16, 17, 17, 16, 16, 17, 17, 17, 16, 14, 17, 17, 17, 17, 15, 16, 14, 16, 15, 16, 13, 16, 15, 16, 14, 16, 15, 16, 12, 16, 15, 16, 17, 17, 17, 17, 17, 13, 16, 15, 17, 17, 17, 16, 15, 17, 17, 17, 16, 15, 17, 17, 14, 16, 17, 17, 16, 17, 17, 16, 15, 17, 16, 14, 17, 16, 15, 17, 16, 17, 17, 16, 17, 15, 16, 17, 14, 17, 16, 15, 17, 16, 17, 13, 17, 16, 17, 17, 16, 17, 14, 17, 16, 17, 16, 17, 16, 17, 9];
 
     var mtx = MUL[radiusX]|0;
@@ -2932,74 +3039,33 @@ var DropShadowFilter = function ()
 {
     BitmapFilter.call(this);
 
-    this.filterId   = 0;
-    this.distance   = 4;
-    this.angle      = 45;
-    this.color      = 0;
-    this.alpha      = 1;
-    this.blurX      = 4;
-    this.blurY      = 4;
-    this.strength   = 1;
-    this.quality    = 1;
-    this.inner      = false;
-    this.knockout   = false;
-    this.hideObject = false;
+    this.filterId = 0;
+
+    // default
+    this._distance   = 4;
+    this._angle      = 45;
+    this._color      = 0;
+    this._alpha      = 1;
+    this._blurX      = 4;
+    this._blurY      = 4;
+    this._strength   = 1;
+    this._quality    = 1;
+    this._inner      = false;
+    this._knockout   = false;
+    this._hideObject = false;
 
     var arg = arguments;
-    var distance = +arg[0];
-    if (!this.$isNaN(distance)) {
-        this.distance = distance;
-    }
-
-    var angle = +arg[1];
-    if (!this.$isNaN(angle) && 0 <= angle && 360 >= angle) {
-        this.angle = angle;
-    }
-
-    var color = +arg[2];
-    if (!this.$isNaN(color)) {
-        this.color = this.$toColorInt(color);
-    }
-
-    var alpha = +arg[3];
-    if (!this.$isNaN(alpha) && 0 <= alpha && 1 >= alpha) {
-        this.alpha = alpha;
-    }
-
-    var blurX = +arg[4];
-    if (!this.$isNaN(blurX) && 0 <= blurX && 255 >= blurX) {
-        this.blurX = blurX;
-    }
-
-    var blurY = +arg[5];
-    if (!this.$isNaN(blurY) && 0 <= blurY && 255 >= blurY) {
-        this.blurY = blurY;
-    }
-
-    var strength = +arg[6];
-    if (!this.$isNaN(strength) && 0 <= strength && 255 >= strength) {
-        this.strength = strength;
-    }
-
-    var quality = arg[7]|0;
-    if (1 <= quality && 15 >= quality) {
-        this.quality = quality;
-    }
-
-    var inner = arg[8];
-    if (typeof inner === "boolean") {
-        this.inner = inner;
-    }
-
-    var knockout = arg[9];
-    if (typeof knockout === "boolean") {
-        this.knockout = knockout;
-    }
-
-    var hideObject = arg[10];
-    if (typeof hideObject === "boolean") {
-        this.hideObject = hideObject;
-    }
+    this.distance   = arg[0];
+    this.angle      = arg[1];
+    this.color      = arg[2];
+    this.alpha      = arg[3];
+    this.blurX      = arg[4];
+    this.blurY      = arg[5];
+    this.strength   = arg[6];
+    this.quality    = arg[7];
+    this.inner      = arg[8];
+    this.knockout   = arg[9];
+    this.hideObject = arg[10];
 };
 
 /**
@@ -3010,6 +3076,123 @@ DropShadowFilter.prototype = Object.create(BitmapFilter.prototype);
 DropShadowFilter.prototype.constructor = DropShadowFilter;
 
 /**
+ * properties
+ */
+Object.defineProperties(DropShadowFilter.prototype, {
+    distance: {
+        get: function () {
+            return this._distance;
+        },
+        set: function (distance) {
+            if (!this.$isNaN(distance)) {
+                this._distance = distance;
+            }
+        }
+    },
+    angle: {
+        get: function () {
+            return this._angle;
+        },
+        set: function (angle) {
+            if (!this.$isNaN(angle) && 0 <= angle && 360 >= angle) {
+                this._angle = angle % 360;
+            }
+        }
+    },
+    color: {
+        get: function () {
+            return this._color;
+        },
+        set: function (color) {
+            if (color) {
+                this._color = this.$toColorInt(color);
+            }
+        }
+    },
+    alpha: {
+        get: function () {
+            return this._alphae;
+        },
+        set: function (alpha) {
+            if (!this.$isNaN(alpha) && 0 <= alpha && 1 >= alpha) {
+                this._alphae = alpha;
+            }
+        }
+    },
+    blurX: {
+        get: function () {
+            return this._blurX;
+        },
+        set: function (blurX) {
+            if (!this.$isNaN(blurX) && 0 <= blurX && 256 > blurX) {
+                this._blurX = blurX;
+            }
+        }
+    },
+    blurY: {
+        get: function () {
+            return this._blurY;
+        },
+        set: function (blurY) {
+            if (!this.$isNaN(blurY) && 0 <= blurY && 256 > blurY) {
+                this._blurY = blurY;
+            }
+        }
+    },
+    strength: {
+        get: function () {
+            return this._strength;
+        },
+        set: function (strength) {
+            if (!this.$isNaN(strength) && 0 <= strength && 256 > strength) {
+                this._strength = strength;
+            }
+        }
+    },
+    quality: {
+        get: function () {
+            return this._quality;
+        },
+        set: function (quality) {
+            if (0 < quality && 16 > quality) {
+                this._quality = quality;
+            }
+        }
+    },
+    inner: {
+        get: function () {
+            return this._inner;
+        },
+        set: function (inner) {
+            if (typeof inner === "boolean") {
+                this._inner = inner;
+            }
+        }
+    },
+    knockout: {
+        get: function () {
+            return this._knockout;
+        },
+        set: function (knockout) {
+            if (typeof knockout === "boolean") {
+                this._knockout = knockout;
+            }
+        }
+    },
+    hideObject: {
+        get: function () {
+            return this._hideObject;
+        },
+        set: function (hideObject) {
+            if (typeof hideObject === "boolean") {
+                this._hideObject = hideObject;
+            }
+        }
+    }
+});
+
+
+/**
  * @param cache
  * @param matrix
  * @param colorTransform
@@ -3018,14 +3201,14 @@ DropShadowFilter.prototype.constructor = DropShadowFilter;
 DropShadowFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
     var strength = this.strength;
-    if (strength === 0) {
+    if (strength <= 0) {
         return cache;
     }
 
     var quality = this.quality;
     var inner   = this.inner;
 
-    var r = this.angle * this.$PI / 180;
+    var r = +(this.angle * this.$PI / 180);
     var blurX = this.blurX;
     var blurY = this.blurY;
 
@@ -3034,8 +3217,7 @@ DropShadowFilter.prototype.render = function (cache, matrix, colorTransform, sta
     var ctx        = blurFilter.render(cache, matrix, colorTransform, stage);
 
     // dropShadow
-    var intColor    = this.$toColorInt(this.color);
-    var filterColor = this.$intToRGBA(intColor);
+    var filterColor = this.$intToRGBA(this.color);
     var color       = this.$generateColorTransform(filterColor, colorTransform);
     ctx             = this.coatOfColor(ctx, color, inner, strength);
 
@@ -3045,45 +3227,40 @@ DropShadowFilter.prototype.render = function (cache, matrix, colorTransform, sta
     var _offsetX     = ctx._offsetX;
     var _offsetY     = ctx._offsetY;
 
-    var canvas    = ctx.canvas;
-    var synCanvas = this.$cacheStore.getCanvas();
-    var width     = (canvas.width  + cacheOffsetX)|0;
-    var height    = (canvas.height + cacheOffsetY)|0;
-
-    var ox = 0;
-    var oy = 0;
-    var dx = 0;
-    var dy = 0;
+    var canvas = ctx.canvas;
+    var width  = (canvas.width  + cacheOffsetX)|0;
+    var height = (canvas.height + cacheOffsetY)|0;
 
     var distance = this.distance;
     var scale    = stage.getScale();
+    var x = this.$ceil(this.$cos(r) * distance * scale * stage.ratio)|0;
+    var y = this.$ceil(this.$sin(r) * distance * scale * stage.ratio)|0;
 
-    var x = +this.$ceil(this.$cos(r) * distance * scale);
-    var y = +this.$ceil(this.$sin(r) * distance * scale);
+    width  = (width  + this.$abs(x))|0;
+    height = (height + this.$abs(y))|0;
 
-    if (x) {
-        width = (this.$abs(x) + width)|0;
-        if (x < 0) {
-            ox = (ox - x)|0;
-        } else {
-            dx = x;
-        }
+    var cx = _offsetX;
+    var cy = _offsetY;
+    var dx = 0;
+    var dy = 0;
+    if (x < 0) {
+        cx = (cx - x)|0;
+    } else if (x > 0) {
+        dx = x|0;
     }
 
-    if (y) {
-        height += this.$abs(y);
-        if (y < 0) {
-            oy = (oy - y)|0;
-        } else {
-            dy = y;
-        }
+    if (y < 0) {
+        cy = (cy - y)|0;
+    } else if (y > 0) {
+        dy = y|0;
     }
 
-    synCanvas.width  = width;
-    synCanvas.height = height;
+    var synCanvas = this.$cacheStore.getCanvas();
+    synCanvas.width  = width|0;
+    synCanvas.height = height|0;
 
     var synCtx = synCanvas.getContext("2d");
-    synCtx.drawImage(cache.canvas, _offsetX + ox, _offsetY + oy);
+    synCtx.drawImage(cache.canvas, cx, cy);
     synCtx.globalAlpha = this.alpha;
     if (strength < 1) {
         synCtx.globalAlpha = +(synCtx.globalAlpha * strength);
@@ -3091,12 +3268,39 @@ DropShadowFilter.prototype.render = function (cache, matrix, colorTransform, sta
 
     var knockout   = this.knockout;
     var hideObject = this.hideObject;
-
     synCtx.globalCompositeOperation = this.filterOperation(inner, knockout, hideObject);
-    synCtx.drawImage(canvas, cacheOffsetX + dx, cacheOffsetY + dy);
 
-    synCtx._offsetX = +(cacheOffsetX + _offsetX);
-    synCtx._offsetY = +(cacheOffsetY + _offsetY);
+    if (inner) {
+        var innerCanvas    = this.$cacheStore.getCanvas();
+        innerCanvas.width  = width;
+        innerCanvas.height = height;
+        var innerCtx       = innerCanvas.getContext("2d");
+
+        // back
+        innerCtx.fillStyle = "rgba(" +
+            filterColor.R + "," +
+            filterColor.G + "," +
+            filterColor.B + "," +
+            filterColor.A + ")";
+        innerCtx.fillRect(0, 0, width, height);
+
+        // mask
+        innerCtx.globalCompositeOperation = "destination-out";
+        innerCtx.fillStyle = "black";
+        innerCtx.fillRect(cacheOffsetX + dx, cacheOffsetY + dy, canvas.width, canvas.height);
+
+        innerCtx.globalCompositeOperation = "source-over";
+        innerCtx.drawImage(canvas, cacheOffsetX + dx, cacheOffsetY + dy);
+
+        synCtx.drawImage(innerCtx.canvas, 0, 0);
+        this.$cacheStore.destroy(innerCtx);
+
+    } else {
+        synCtx.drawImage(canvas, cacheOffsetX + dx, cacheOffsetY + dy);
+    }
+
+    synCtx._offsetX = +(cacheOffsetX + cx);
+    synCtx._offsetY = +(cacheOffsetY + cy);
 
     this.$cacheStore.destroy(ctx);
 
@@ -3110,56 +3314,26 @@ var GlowFilter = function ()
     BitmapFilter.call(this);
 
     this.filterId = 2;
-    this.color    = 0xFF0000;
-    this.alpha    = 1;
-    this.blurX    = 6;
-    this.blurY    = 6;
-    this.strength = 2;
-    this.quality  = 1;
-    this.inner    = false;
-    this.knockout = false;
 
-    var arg = arguments;
+    // default
+    this._color    = 0xff0000;
+    this._alpha    = 1;
+    this._blurX    = 6;
+    this._blurY    = 6;
+    this._strength = 2;
+    this._quality  = 1;
+    this._inner    = false;
+    this._knockout = false;
 
-    var color = this.$toColorInt(arg[0]);
-    if (!this.$isNaN(color)) {
-        this.color = color;
-    }
-
-    var alpha = +arg[1];
-    if (!this.$isNaN(alpha) && 0 <= alpha && 1 >= alpha) {
-        this.alpha = alpha;
-    }
-
-    var blurX = 0 | arg[2];
-    if (0 <= blurX && 255 >= blurX) {
-        this.blurX = blurX;
-    }
-
-    var blurY = 0 | arg[3]|0;
-    if (0 <= blurY && 255 >= blurY) {
-        this.blurY = blurY;
-    }
-
-    var strength = +arg[4];
-    if (!this.$isNaN(strength) && 0 <= strength && 255 >= strength) {
-        this.strength = strength;
-    }
-
-    var quality = 0 | arg[5]|0;
-    if (1 <= quality && 15 >= quality) {
-        this.quality = quality;
-    }
-
-    var inner = arg[6];
-    if (typeof inner === "boolean") {
-        this.inner = inner;
-    }
-
-    var knockout = arg[7];
-    if (typeof knockout === "boolean") {
-        this.knockout = knockout;
-    }
+    var arg       = arguments;
+    this.color    = arg[0];
+    this.alpha    = arg[1];
+    this.blurX    = arg[2];
+    this.blurY    = arg[3];
+    this.strength = arg[4];
+    this.quality  = arg[5];
+    this.inner    = arg[6];
+    this.knockout = arg[7];
 };
 
 /**
@@ -3168,6 +3342,92 @@ var GlowFilter = function ()
  */
 GlowFilter.prototype = Object.create(BitmapFilter.prototype);
 GlowFilter.prototype.constructor = GlowFilter;
+
+/**
+ * properties
+ */
+Object.defineProperties(GlowFilter.prototype, {
+    color: {
+        get: function () {
+            return this._color;
+        },
+        set: function (color) {
+            if (color) {
+                this._color = this.$toColorInt(color);
+            }
+        }
+    },
+    alpha: {
+        get: function () {
+            return this._alpha;
+        },
+        set: function (alpha) {
+            if (!this.$isNaN(alpha) && 0 <= alpha && 1 >= alpha) {
+                this._alpha = +alpha;
+            }
+        }
+    },
+    blurX: {
+        get: function () {
+            return this._blurX;
+        },
+        set: function (blurX) {
+            if (!this.$isNaN(blurX) && 0 <= blurX && 256 > blurX) {
+                this._blurX = +blurX;
+            }
+        }
+    },
+    blurY: {
+        get: function () {
+            return this._blurY;
+        },
+        set: function (blurY) {
+            if (!this.$isNaN(blurY) && 0 <= blurY && 256 > blurY) {
+                this._blurY = +blurY;
+            }
+        }
+    },
+    strength: {
+        get: function () {
+            return this._strength;
+        },
+        set: function (strength) {
+            if (!this.$isNaN(strength) && 0 <= strength && 256 > strength) {
+                this._strength = +strength;
+            }
+        }
+    },
+    quality: {
+        get: function () {
+            return this._quality;
+        },
+        set: function (quality) {
+            if (!this.$isNaN(quality) && 0 < quality && 16 > quality) {
+                this._quality = quality|0;
+            }
+        }
+    },
+    inner: {
+        get: function () {
+            return this._inner;
+        },
+        set: function (inner) {
+            if (typeof inner === "boolean") {
+                this._inner = inner;
+            }
+        }
+    },
+    knockout: {
+        get: function () {
+            return this._knockout;
+        },
+        set: function (knockout) {
+            if (typeof knockout === "boolean") {
+                this._knockout = knockout;
+            }
+        }
+    }
+});
 
 /**
  * @param cache
@@ -3179,26 +3439,20 @@ GlowFilter.prototype.constructor = GlowFilter;
 GlowFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
     var strength = this.strength;
-    if (strength === 0) {
+    if (strength <= 0) {
         return cache;
     }
 
-    var inner = this.inner;
-    var blurX = this.blurX;
-    var blurY = this.blurY;
-
-    var blurFilter = new BlurFilter(blurX, blurY, this.quality);
+    var blurFilter = new BlurFilter(this.blurX, this.blurY, this.quality);
 
     var ctx    = blurFilter.render(cache, matrix, colorTransform, stage);
-    var width  = 0 | ctx.canvas.width  + cache._offsetX;
-    var height = 0 | ctx.canvas.height + cache._offsetY;
+    var width  = (ctx.canvas.width  + cache._offsetX)|0;
+    var height = (ctx.canvas.height + cache._offsetY)|0;
 
-    var intColor    = this.$toColorInt(this.color);
-    var filterColor = this.$intToRGBA(intColor);
+    var filterColor = this.$intToRGBA(this.color);
+    var color       = this.$generateColorTransform(filterColor, colorTransform);
 
-    var color = this.$generateColorTransform(filterColor, colorTransform);
-
-    ctx = this.coatOfColor(ctx, color, inner, strength);
+    ctx = this.coatOfColor(ctx, color, this.inner, strength);
 
     var synCanvas    = this.$cacheStore.getCanvas();
     synCanvas.width  = width;
@@ -3208,28 +3462,13 @@ GlowFilter.prototype.render = function (cache, matrix, colorTransform, stage)
     synCtx.drawImage(cache.canvas, ctx._offsetX, ctx._offsetY);
     synCtx.globalAlpha = this.alpha;
     if (strength < 1) {
-        synCtx.globalAlpha *= strength;
+        synCtx.globalAlpha = +(synCtx.globalAlpha * strength);
     }
 
-    var operation = "source-over";
-    if (this.knockout) {
-        if (inner) {
-            operation = "source-in";
-        } else {
-            operation = "source-out";
-        }
-    } else {
-        if (inner) {
-            operation = "source-atop";
-        } else {
-            operation = "destination-over";
-        }
-    }
-
-    synCtx.globalCompositeOperation = operation;
+    synCtx.globalCompositeOperation = this.filterOperation(this.inner, this.knockout);
     synCtx.drawImage(ctx.canvas, cache._offsetX, cache._offsetY);
-    synCtx._offsetX = 0 | cache._offsetX + ctx._offsetX;
-    synCtx._offsetY = 0 | cache._offsetY + ctx._offsetY;
+    synCtx._offsetX = +(cache._offsetX + ctx._offsetX);
+    synCtx._offsetY = +(cache._offsetY + ctx._offsetY);
 
     this.$cacheStore.destroy(ctx);
 
@@ -5571,11 +5810,12 @@ DisplayObject.prototype.renderFilter = function (ctx, matrix, colorTransform, st
     if (!cache) {
         var fLength = filters.length|0;
         var i = 0;
+        cache = ctx;
         while (i < fLength) {
             var filter = filters[i];
             i = (i + 1)|0;
 
-            cache = filter.render(ctx, matrix, colorTransform, stage);
+            cache = filter.render(cache, matrix, colorTransform, stage);
         }
 
         this._filterCacheKey = cacheKey;
@@ -29338,10 +29578,11 @@ Util.prototype.$vtc = new VectorToCanvas();
 /**
  * @constructor
  */
-var CacheStore = function () {
-    this.pool  = [];
-    this.store = [];
-    this.size  = 73400320;
+var CacheStore = function ()
+{
+    this.pool    = [];
+    this.store   = [];
+    this.size    = 73400320;
 };
 
 /**

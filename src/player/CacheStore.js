@@ -1,10 +1,11 @@
 /**
  * @constructor
  */
-var CacheStore = function () {
-    this.pool  = [];
-    this.store = [];
-    this.size  = 73400320;
+var CacheStore = function ()
+{
+    this.pool    = [];
+    this.store   = [];
+    this.size    = 73400320;
 };
 
 /**
