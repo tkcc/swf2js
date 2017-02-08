@@ -96,8 +96,10 @@ ColorMatrixFilter.prototype.render = function (cache, matrix, colorTransform, st
     }
 
     matrixCtx.putImageData(imageData, 0, 0);
-    matrixCtx._offsetX = 0;
-    matrixCtx._offsetY = 0;
+    matrixCtx._offsetX = +cache._offsetX;
+    matrixCtx._offsetY = +cache._offsetY;
+
+    this.$cacheStore.destroy(cache);
 
     return matrixCtx;
 };
