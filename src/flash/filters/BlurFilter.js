@@ -70,32 +70,22 @@ Object.defineProperties(BlurFilter.prototype, {
  */
 BlurFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
-    var cacheCanvas = cache.canvas;
-    var canvas      = this.$cacheStore.getCanvas();
-    canvas.width    = cacheCanvas.width|0;
-    canvas.height   = cacheCanvas.height|0;
+    var _blurX = this.blurX;
+    var _blurY = this.blurY;
+    if (!_blurX && !_blurY) {
+        return cache;
+    }
 
-    var ctx = canvas.getContext("2d");
+    var cacheCanvas = cache.canvas;
+    var copyCanvas      = this.$cacheStore.getCanvas();
+    copyCanvas.width    = cacheCanvas.width|0;
+    copyCanvas.height   = cacheCanvas.height|0;
+
+    var ctx = copyCanvas.getContext("2d");
     ctx.drawImage(cacheCanvas, 0, 0);
 
     ctx._offsetX = +cache._offsetX;
     ctx._offsetY = +cache._offsetY;
-
-    return this.executeFilter(ctx, stage);
-};
-
-/**
- * @param ctx
- * @param stage
- * @returns {*}
- */
-BlurFilter.prototype.executeFilter = function (ctx, stage)
-{
-    var _blurX = this.blurX;
-    var _blurY = this.blurY;
-    if (!_blurX && !_blurY) {
-        return ctx;
-    }
 
     var scale = stage.getScale();
 

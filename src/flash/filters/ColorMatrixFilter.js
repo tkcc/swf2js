@@ -8,12 +8,7 @@ var ColorMatrixFilter = function ()
     this.filterId = 6;
 
     // default
-    this._matrix = [
-        1.0, 0.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 0.0, 1.0, 0.0
-    ];
+    this._matrix = null;
 
     this.matrix = arguments[0];
 };
@@ -41,7 +36,6 @@ Object.defineProperties(ColorMatrixFilter.prototype, {
     }
 });
 
-
 /**
  * @param cache
  * @param matrix
@@ -52,6 +46,9 @@ Object.defineProperties(ColorMatrixFilter.prototype, {
 ColorMatrixFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
     var mtx = this.matrix;
+    if (!mtx) {
+        return cache;
+    }
 
     var cacheCanvas = cache.canvas;
     var width       = cacheCanvas.width|0;

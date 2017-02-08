@@ -1999,6 +1999,7 @@ DisplayObject.prototype.postRender = function(ctx, matrix, colorTransform, stage
     var cache    = obj.preCtx;
     var isFilter = obj.isFilter;
     var cacheKey = obj.cacheKey;
+
     if (isFilter && cacheKey) {
         cache = this.renderFilter(cache, matrix, colorTransform, stage, cacheKey);
     }
@@ -2132,6 +2133,8 @@ DisplayObject.prototype.renderFilter = function (ctx, matrix, colorTransform, st
         var fLength = filters.length|0;
         var i = 0;
         cache = ctx;
+        cache._offsetX = 0;
+        cache._offsetY = 0;
         while (i < fLength) {
             var filter = filters[i];
             i = (i + 1)|0;

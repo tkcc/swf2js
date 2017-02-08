@@ -2679,32 +2679,22 @@ Object.defineProperties(BlurFilter.prototype, {
  */
 BlurFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
-    var cacheCanvas = cache.canvas;
-    var canvas      = this.$cacheStore.getCanvas();
-    canvas.width    = cacheCanvas.width|0;
-    canvas.height   = cacheCanvas.height|0;
+    var _blurX = this.blurX;
+    var _blurY = this.blurY;
+    if (!_blurX && !_blurY) {
+        return cache;
+    }
 
-    var ctx = canvas.getContext("2d");
+    var cacheCanvas = cache.canvas;
+    var copyCanvas      = this.$cacheStore.getCanvas();
+    copyCanvas.width    = cacheCanvas.width|0;
+    copyCanvas.height   = cacheCanvas.height|0;
+
+    var ctx = copyCanvas.getContext("2d");
     ctx.drawImage(cacheCanvas, 0, 0);
 
     ctx._offsetX = +cache._offsetX;
     ctx._offsetY = +cache._offsetY;
-
-    return this.executeFilter(ctx, stage);
-};
-
-/**
- * @param ctx
- * @param stage
- * @returns {*}
- */
-BlurFilter.prototype.executeFilter = function (ctx, stage)
-{
-    var _blurX = this.blurX;
-    var _blurY = this.blurY;
-    if (!_blurX && !_blurY) {
-        return ctx;
-    }
 
     var scale = stage.getScale();
 
@@ -2987,12 +2977,7 @@ var ColorMatrixFilter = function ()
     this.filterId = 6;
 
     // default
-    this._matrix = [
-        1.0, 0.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 0.0, 1.0, 0.0
-    ];
+    this._matrix = null;
 
     this.matrix = arguments[0];
 };
@@ -3020,7 +3005,6 @@ Object.defineProperties(ColorMatrixFilter.prototype, {
     }
 });
 
-
 /**
  * @param cache
  * @param matrix
@@ -3031,6 +3015,9 @@ Object.defineProperties(ColorMatrixFilter.prototype, {
 ColorMatrixFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
     var mtx = this.matrix;
+    if (!mtx) {
+        return cache;
+    }
 
     var cacheCanvas = cache.canvas;
     var width       = cacheCanvas.width|0;
@@ -3089,6 +3076,28 @@ var ConvolutionFilter = function ()
 {
     BitmapFilter.call(this);
     this.filterId = 5;
+
+    // default
+    this._matrixX       = 0;
+    this._matrixY       = 0;
+    this._matrix        = null;
+    this._divisor       = 0;
+    this._bias          = 0;
+    this._preserveAlpha = true;
+    this._clamp         = true;
+    this._color         = 0;
+    this._alpha         = 0;
+
+    var arg = arguments;
+    this.matrixX       = arg[0];
+    this.matrixY       = arg[1];
+    this.matrix        = arg[2];
+    this.divisor       = arg[3];
+    this.bias          = arg[4];
+    this.preserveAlpha = arg[5];
+    this.clamp         = arg[6];
+    this.color         = arg[7];
+    this.alpha         = arg[8];
 };
 
 /**
@@ -3097,6 +3106,103 @@ var ConvolutionFilter = function ()
  */
 ConvolutionFilter.prototype = Object.create(BitmapFilter.prototype);
 ConvolutionFilter.prototype.constructor = ConvolutionFilter;
+
+/**
+ * properties
+ */
+Object.defineProperties(BevelFilter.prototype, {
+    matrixX: {
+        get: function () {
+            return this._matrixX;
+        },
+        set: function (matrixX) {
+            if (!this.$isNaN(matrixX)) {
+                this._matrixX = matrixX;
+            }
+        }
+    },
+    matrixY: {
+        get: function () {
+            return this._matrixY;
+        },
+        set: function (matrixY) {
+            if (!this.$isNaN(matrixY)) {
+                this._matrixY = matrixY;
+            }
+        }
+    },
+    matrix: {
+        get: function () {
+            return this._matrix;
+        },
+        set: function (matrix) {
+            if (matrix instanceof Array) {
+                this._matrix = matrix;
+            }
+        }
+    },
+    divisor: {
+        get: function () {
+            return this._divisor;
+        },
+        set: function (divisor) {
+            if (!this.$isNaN(divisor)) {
+                this._divisor = divisor;
+            }
+        }
+    },
+    bias: {
+        get: function () {
+            return this._bias;
+        },
+        set: function (bias) {
+            if (!this.$isNaN(bias)) {
+                this._bias = bias;
+            }
+        }
+    },
+    preserveAlpha: {
+        get: function () {
+            return this._preserveAlpha;
+        },
+        set: function (preserveAlpha) {
+            if (typeof preserveAlpha === "boolean") {
+                this._preserveAlpha = preserveAlpha;
+            }
+        }
+    },
+    clamp: {
+        get: function () {
+            return this._clamp;
+        },
+        set: function (clamp) {
+            if (typeof clamp === "boolean") {
+                this._clamp = clamp;
+            }
+        }
+    },
+    color: {
+        get: function () {
+            return this._color;
+        },
+        set: function (color) {
+            if (color) {
+                this._color = this.$toColorInt(color);
+            }
+        }
+    },
+    alpha: {
+        get: function () {
+            return this._alpha;
+        },
+        set: function (alpha) {
+            if (!this.$isNaN(alpha) && 0 <= alpha && 1 >= alpha) {
+                this._alpha = alpha;
+            }
+        }
+    }
+});
+
 
 /**
  * @param cache
@@ -3756,6 +3862,25 @@ GradientGlowFilter.prototype.render = function (cache, matrix, colorTransform, s
     return synCtx;
 };
 var ShaderFilter = function () {};
+
+/**
+ * extends
+ * @type {BitmapFilter}
+ */
+ShaderFilter.prototype = Object.create(BitmapFilter.prototype);
+ShaderFilter.prototype.constructor = ShaderFilter;
+
+/**
+ * @param cache
+ * @param matrix
+ * @param colorTransform
+ * @param stage
+ * @returns {*}
+ */
+ShaderFilter.prototype.render = function (cache, matrix, colorTransform, stage)
+{
+    return cache;
+};
 /**
  * @constructor
  */
@@ -5761,6 +5886,7 @@ DisplayObject.prototype.postRender = function(ctx, matrix, colorTransform, stage
     var cache    = obj.preCtx;
     var isFilter = obj.isFilter;
     var cacheKey = obj.cacheKey;
+
     if (isFilter && cacheKey) {
         cache = this.renderFilter(cache, matrix, colorTransform, stage, cacheKey);
     }
@@ -5894,6 +6020,8 @@ DisplayObject.prototype.renderFilter = function (ctx, matrix, colorTransform, st
         var fLength = filters.length|0;
         var i = 0;
         cache = ctx;
+        cache._offsetX = 0;
+        cache._offsetY = 0;
         while (i < fLength) {
             var filter = filters[i];
             i = (i + 1)|0;
@@ -27692,13 +27820,11 @@ SwfTag.prototype.gradientBevelFilter = function ()
 SwfTag.prototype.colorMatrixFilter = function ()
 {
     var bitio = this.getBitIO();
-    var MatrixArr = [];
+    var matrix = [];
     for (var i = 0; i < 20; i++) {
-        MatrixArr[MatrixArr.length] = bitio.getUI32();
+        matrix[matrix.length] = bitio.getFloat32();
     }
-
-    return new ColorMatrixFilter(
-    );
+    return new ColorMatrixFilter(matrix);
 };
 
 /**

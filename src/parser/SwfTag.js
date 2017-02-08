@@ -3746,13 +3746,11 @@ SwfTag.prototype.gradientBevelFilter = function ()
 SwfTag.prototype.colorMatrixFilter = function ()
 {
     var bitio = this.getBitIO();
-    var MatrixArr = [];
+    var matrix = [];
     for (var i = 0; i < 20; i++) {
-        MatrixArr[MatrixArr.length] = bitio.getUI32();
+        matrix[matrix.length] = bitio.getFloat32();
     }
-
-    return new ColorMatrixFilter(
-    );
+    return new ColorMatrixFilter(matrix);
 };
 
 /**
