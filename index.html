@@ -52,8 +52,15 @@
     bevel.knockout = true;
     bevel.type = "inner";
 
-//    shape.filters = [blur, dropShadow, bevel];
-//
+    var cmf = new swf2js.ColorMatrixFilter([
+        0.393, 0.769, 0.189, 0, 0,
+        0.349, 0.686, 0.168, 0, 0,
+        0.272, 0.534, 0.131, 0, 0,
+        0.0, 0.0, 0.0, 1.0, 0.0
+    ]);
+
+    shape.filters = [cmf];
+
 //    mc.loadMovie("./swf/avm1/monster/26.swf");
 //
 //    mc.addEventListener("data", function ()
@@ -63,8 +70,12 @@
 //        this.scaleX = -150;
 //        this.scaleY = 150;
 //
-//        var filter = new swf2js.BevelFilter();
-//        filter.distance = 5;
+//        var filter = new swf2js.ColorMatrixFilter([
+//            0.393, 0.769, 0.189, 0, 0,
+//            0.349, 0.686, 0.168, 0, 0,
+//            0.272, 0.534, 0.131, 0, 0,
+//            0, 0, 0, 1, 0
+//        ]);
 //        this.filters = [filter];
 //    });
 </script>

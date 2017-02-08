@@ -2093,7 +2093,12 @@ DisplayObject.prototype.getFilterKey = function (filters)
                 continue;
             }
 
-            keys[keys.length] = filter[prop];
+            var value = filter[prop];
+            if (value instanceof Array) {
+                value = value.join("_");
+            }
+
+            keys[keys.length] = value;
         }
     }
 
