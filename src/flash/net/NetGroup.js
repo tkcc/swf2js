@@ -1,0 +1,1 @@
+var NetGroup = function () {};

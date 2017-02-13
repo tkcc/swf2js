@@ -1,0 +1,1 @@
+var StageVideo = function () {};

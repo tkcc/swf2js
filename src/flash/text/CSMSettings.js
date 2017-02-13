@@ -1,0 +1,1 @@
+var CSMSettings = function () {};

@@ -1918,137 +1918,136 @@ EventDispatcher.prototype.constructor = EventDispatcher;
 /**
  * properties
  */
-Object.defineProperties(EventDispatcher.prototype,
-    {
-        onEnterFrame: {
-            get: function () {
-                return this.getOnEvent("onEnterFrame");
-            },
-            set: function (onEnterFrame) {
-                this.setOnEvent("onEnterFrame", onEnterFrame);
-            }
+Object.defineProperties(EventDispatcher.prototype, {
+    onEnterFrame: {
+        get: function () {
+            return this.getOnEvent("onEnterFrame");
         },
-        onPress: {
-            get: function () {
-                return this.getOnEvent("onPress");
-            },
-            set: function (onPress) {
-                this.setOnEvent("onPress", onPress);
-            }
-        },
-        onRelease: {
-            get: function () {
-                return this.getOnEvent("onRelease");
-            },
-            set: function (onRelease) {
-                this.setOnEvent("onRelease", onRelease);
-            }
-        },
-        onReleaseOutside: {
-            get: function () {
-                return this.getOnEvent("onReleaseOutside");
-            },
-            set: function (onReleaseOutside) {
-                this.setOnEvent("onReleaseOutside", onReleaseOutside);
-            }
-        },
-        onRollOver: {
-            get: function () {
-                return this.getOnEvent("onRollOver");
-            },
-            set: function (onRollOver) {
-                this.setOnEvent("onRollOver", onRollOver);
-            }
-        },
-        onRollOut: {
-            get: function () {
-                return this.getOnEvent("onRollOut");
-            },
-            set: function (onRollOut) {
-                this.setOnEvent("onRollOut", onRollOut);
-            }
-        },
-        onData: {
-            get: function () {
-                return this.getOnEvent("onData");
-            },
-            set: function (onData) {
-                this.setOnEvent("onData", onData);
-            }
-        },
-        onMouseDown: {
-            get: function () {
-                return this.getOnEvent("onMouseDown");
-            },
-            set: function (onMouseDown) {
-                this.setOnEvent("onMouseDown", onMouseDown);
-            }
-        },
-        onMouseUp: {
-            get: function () {
-                return this.getOnEvent("onMouseUp");
-            },
-            set: function (onMouseUp) {
-                this.setOnEvent("onMouseUp", onMouseUp);
-            }
-        },
-        onMouseMove: {
-            get: function () {
-                return this.getOnEvent("onMouseMove");
-            },
-            set: function (onMouseMove) {
-                this.setOnEvent("onMouseMove", onMouseMove);
-            }
-        },
-        onDragOut: {
-            get: function () {
-                return this.getOnEvent("onDragOut");
-            },
-            set: function (onDragOut) {
-                this.setOnEvent("onDragOut", onDragOut);
-            }
-        },
-        onDragOver: {
-            get: function () {
-                return this.getOnEvent("onDragOver");
-            },
-            set: function (onDragOver) {
-                this.setOnEvent("onDragOver", onDragOver);
-            }
-        },
-        onKeyDown: {
-            get: function () {
-                return this.getOnEvent("onKeyDown");
-            },
-            set: function (onKeyDown) {
-                this.setOnEvent("onKeyDown", onKeyDown);
-            }
-        },
-        onKeyUp: {
-            get: function () {
-                return this.getOnEvent("onKeyUp");
-            },
-            set: function (onKeyUp) {
-                this.setOnEvent("onKeyUp", onKeyUp);
-            }
-        },
-        onLoad: {
-            get: function () {
-                return this.getOnEvent("onLoad");
-            },
-            set: function (onLoad) {
-                this.setOnEvent("onLoad", onLoad);
-            }
-        },
-        onUnLoad: {
-            get: function () {
-                return this.getOnEvent("onUnLoad");
-            },
-            set: function (onUnLoad) {
-                this.setOnEvent("onUnLoad", onUnLoad);
-            }
+        set: function (onEnterFrame) {
+            this.setOnEvent("onEnterFrame", onEnterFrame);
         }
-    });
+    },
+    onPress: {
+        get: function () {
+            return this.getOnEvent("onPress");
+        },
+        set: function (onPress) {
+            this.setOnEvent("onPress", onPress);
+        }
+    },
+    onRelease: {
+        get: function () {
+            return this.getOnEvent("onRelease");
+        },
+        set: function (onRelease) {
+            this.setOnEvent("onRelease", onRelease);
+        }
+    },
+    onReleaseOutside: {
+        get: function () {
+            return this.getOnEvent("onReleaseOutside");
+        },
+        set: function (onReleaseOutside) {
+            this.setOnEvent("onReleaseOutside", onReleaseOutside);
+        }
+    },
+    onRollOver: {
+        get: function () {
+            return this.getOnEvent("onRollOver");
+        },
+        set: function (onRollOver) {
+            this.setOnEvent("onRollOver", onRollOver);
+        }
+    },
+    onRollOut: {
+        get: function () {
+            return this.getOnEvent("onRollOut");
+        },
+        set: function (onRollOut) {
+            this.setOnEvent("onRollOut", onRollOut);
+        }
+    },
+    onData: {
+        get: function () {
+            return this.getOnEvent("onData");
+        },
+        set: function (onData) {
+            this.setOnEvent("onData", onData);
+        }
+    },
+    onMouseDown: {
+        get: function () {
+            return this.getOnEvent("onMouseDown");
+        },
+        set: function (onMouseDown) {
+            this.setOnEvent("onMouseDown", onMouseDown);
+        }
+    },
+    onMouseUp: {
+        get: function () {
+            return this.getOnEvent("onMouseUp");
+        },
+        set: function (onMouseUp) {
+            this.setOnEvent("onMouseUp", onMouseUp);
+        }
+    },
+    onMouseMove: {
+        get: function () {
+            return this.getOnEvent("onMouseMove");
+        },
+        set: function (onMouseMove) {
+            this.setOnEvent("onMouseMove", onMouseMove);
+        }
+    },
+    onDragOut: {
+        get: function () {
+            return this.getOnEvent("onDragOut");
+        },
+        set: function (onDragOut) {
+            this.setOnEvent("onDragOut", onDragOut);
+        }
+    },
+    onDragOver: {
+        get: function () {
+            return this.getOnEvent("onDragOver");
+        },
+        set: function (onDragOver) {
+            this.setOnEvent("onDragOver", onDragOver);
+        }
+    },
+    onKeyDown: {
+        get: function () {
+            return this.getOnEvent("onKeyDown");
+        },
+        set: function (onKeyDown) {
+            this.setOnEvent("onKeyDown", onKeyDown);
+        }
+    },
+    onKeyUp: {
+        get: function () {
+            return this.getOnEvent("onKeyUp");
+        },
+        set: function (onKeyUp) {
+            this.setOnEvent("onKeyUp", onKeyUp);
+        }
+    },
+    onLoad: {
+        get: function () {
+            return this.getOnEvent("onLoad");
+        },
+        set: function (onLoad) {
+            this.setOnEvent("onLoad", onLoad);
+        }
+    },
+    onUnLoad: {
+        get: function () {
+            return this.getOnEvent("onUnLoad");
+        },
+        set: function (onUnLoad) {
+            this.setOnEvent("onUnLoad", onUnLoad);
+        }
+    }
+});
 
 /**
  * @param type
@@ -2162,7 +2161,7 @@ var BitmapFilter = function () {};
 /**
  * util
  */
-BitmapFilter.prototype = Object.create(Util.prototype);
+BitmapFilter.prototype = Object.create(OriginalObject.prototype);
 BitmapFilter.prototype.constructor = BitmapFilter;
 
 /**
@@ -2607,6 +2606,9 @@ BevelFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 
     return synCtx;
 };
+var BitmapFilterQuality = function () {};
+
+var BitmapFilterType = function () {};
 /**
  * @constructor
  */
@@ -3218,6 +3220,7 @@ ConvolutionFilter.prototype.render = function (cache, matrix, colorTransform, st
     return cache;
 };
 var DisplacementMapFilter = function () {};
+var DisplacementMapFilterMode = function () {};
 /**
  * @constructor
  */
@@ -3665,12 +3668,35 @@ GlowFilter.prototype.render = function (cache, matrix, colorTransform, stage)
  */
 var GradientBevelFilter = function ()
 {
-    var _this = this;
-    BitmapFilter.call(_this);
+    BitmapFilter.call(this);
 
-    _this.filterId = 7;
+    this.filterId = 7;
 
+    // default
+    this._distance = 4;
+    this._angle    = 45;
+    this._colors   = null;
+    this._alphas   = null;
+    this._ratios   = null;
+    this._blurX    = 4;
+    this._blurY    = 4;
+    this._strength = 1;
+    this._quality  = 1;
+    this._type     = "inner";
+    this._knockout = false;
 
+    var arg = arguments;
+    this.distance = arg[0];
+    this.angle    = arg[1];
+    this.colors   = arg[2];
+    this.alphas   = arg[3];
+    this.ratios   = arg[4];
+    this.blurX    = arg[6];
+    this.blurY    = arg[7];
+    this.strength = arg[8];
+    this.quality  = arg[9];
+    this.type     = arg[10];
+    this.knockout = arg[11];
 };
 
 /**
@@ -3680,6 +3706,130 @@ var GradientBevelFilter = function ()
 GradientBevelFilter.prototype = Object.create(BitmapFilter.prototype);
 GradientBevelFilter.prototype.constructor = GradientBevelFilter;
 
+/**
+ * properties
+ */
+Object.defineProperties(GradientBevelFilter.prototype, {
+    distance: {
+        get: function () {
+            return this._distance;
+        },
+        set: function (distance) {
+            if (!this.$isNaN(distance)) {
+                this._distance = distance;
+            }
+        }
+    },
+    angle: {
+        get: function () {
+            return this._angle;
+        },
+        set: function (angle) {
+            if (!this.$isNaN(angle) && 0 <= angle && 360 >= angle) {
+                this._angle = angle % 360;
+            }
+
+        }
+    },
+    colors: {
+        get: function () {
+            return this._colors;
+        },
+        set: function (colors) {
+            if (colors instanceof Array) {
+                this._colors = colors;
+            }
+        }
+    },
+    alphas: {
+        get: function () {
+            return this._alphas;
+        },
+        set: function (alphas) {
+            if (alphas instanceof Array) {
+                this._alphas = alphas;
+            }
+        }
+    },
+    ratios: {
+        get: function () {
+            return this._ratios;
+        },
+        set: function (ratios) {
+            if (ratios instanceof Array) {
+                this._ratios = ratios;
+            }
+        }
+    },
+    blurX: {
+        get: function () {
+            return this._blurX;
+        },
+        set: function (blurX) {
+            if (!this.$isNaN(blurX) && 0 <= blurX && 256 > blurX) {
+                this._blurX = blurX;
+            }
+        }
+    },
+    blurY: {
+        get: function () {
+            return this._blurY;
+        },
+        set: function (blurY) {
+            if (!this.$isNaN(blurY) && 0 <= blurY && 256 > blurY) {
+                this._blurY = blurY;
+            }
+        }
+    },
+    strength: {
+        get: function () {
+            return this._strength;
+        },
+        set: function (strength) {
+            if (!this.$isNaN(strength) && 0 <= strength && 256 >= strength) {
+                this._strength = strength;
+            }
+        }
+    },
+    quality: {
+        get: function () {
+            return this._quality;
+        },
+        set: function (quality) {
+            if (!this.$isNaN(quality) && 0 < quality && 16 > quality) {
+                this._quality = quality;
+            }
+        }
+    },
+    type: {
+        get: function () {
+            return this._type;
+        },
+        set: function (type) {
+            if (typeof type === "string") {
+                switch (type) {
+                    case "inner":
+                    case "outer":
+                    case "full":
+                        this._type = type;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    },
+    knockout: {
+        get: function () {
+            return this._knockout;
+        },
+        set: function (knockout) {
+            if (typeof knockout === "boolean") {
+                this._knockout = knockout;
+            }
+        }
+    }
+});
 
 /**
  * @param cache
@@ -3690,7 +3840,125 @@ GradientBevelFilter.prototype.constructor = GradientBevelFilter;
  */
 GradientBevelFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
-    return cache;
+    var filterColor, color;
+
+    var angle          = this.angle;
+    var shadowColor    = this.shadowColor;
+    var shadowAlpha    = this.shadowAlpha;
+    var highlightColor = this.highlightColor;
+    var highlightAlpha = this.highlightAlpha;
+    var blurX          = this.blurX;
+    var blurY          = this.blurY;
+    var strength       = this.strength;
+    var quality        = this.quality;
+    var knockout       = this.knockout;
+    var type           = this.type;
+
+    var r = +(angle * this.$PI / 180);
+
+    // blur
+    var blurFilter = new BlurFilter(blurX, blurY, quality);
+    var ctx        = blurFilter.render(cache, matrix, colorTransform, stage);
+    var canvas     = ctx.canvas;
+    var _offsetX   = ctx._offsetX;
+    var _offsetY   = ctx._offsetY;
+
+    // shadow
+    var shadowCanvas    = this.$cacheStore.getCanvas();
+    shadowCanvas.width  = canvas.width|0;
+    shadowCanvas.height = canvas.height|0;
+    var shadowCtx       = shadowCanvas.getContext("2d");
+    shadowCtx.drawImage(canvas, 0, 0);
+
+    filterColor        = this.$intToRGBA(shadowColor);
+    color              = this.$generateColorTransform(filterColor, colorTransform);
+    shadowCtx          = this.coatOfColor(shadowCtx, color, false, strength);
+
+    // highlight
+    var highlightCanvas    = this.$cacheStore.getCanvas();
+    highlightCanvas.width  = canvas.width;
+    highlightCanvas.height = canvas.height;
+    var highlightCtx       = highlightCanvas.getContext("2d");
+    highlightCtx.drawImage(canvas, 0, 0);
+
+    filterColor           = this.$intToRGBA(highlightColor);
+    color                 = this.$generateColorTransform(filterColor, colorTransform);
+    highlightCtx          = this.coatOfColor(highlightCtx, color, false, strength);
+
+    var cacheOffsetX = cache._offsetX;
+    var cacheOffsetY = cache._offsetY;
+
+    var width  = (canvas.width  + cacheOffsetX)|0;
+    var height = (canvas.height + cacheOffsetY)|0;
+
+    var distance = this.distance;
+    var scale    = stage.getScale();
+    var x = this.$ceil(this.$cos(r) * distance * scale * stage.ratio)|0;
+    var y = this.$ceil(this.$sin(r) * distance * scale * stage.ratio)|0;
+
+    var ox = _offsetX + this.$abs(x);
+    var oy = _offsetY + this.$abs(y);
+
+    width  = (width  + this.$abs(x) * 2)|0;
+    height = (height + this.$abs(y) * 2)|0;
+
+    var synCanvas    = this.$cacheStore.getCanvas();
+    synCanvas.width  = width|0;
+    synCanvas.height = height|0;
+    var synCtx       = synCanvas.getContext("2d");
+
+    if (!knockout) {
+        synCtx.drawImage(cache.canvas, ox, oy);
+    }
+
+    if (strength < 1) {
+        synCtx.globalAlpha = +(synCtx.globalAlpha * strength);
+    }
+
+    var xorCanvas = this.$cacheStore.getCanvas();
+    xorCanvas.width  = width|0;
+    xorCanvas.height = height|0;
+
+    var xorCtx = xorCanvas.getContext("2d");
+    xorCtx.setTransform(1,0,0,1,this.$abs(x),this.$abs(y));
+    xorCtx.globalCompositeOperation = "xor";
+
+    // highlight
+    xorCtx.globalAlpha = highlightAlpha;
+    xorCtx.drawImage(highlightCtx.canvas, cacheOffsetX - x, cacheOffsetY - y);
+
+    // shadow
+    xorCtx.globalAlpha = shadowAlpha;
+    xorCtx.drawImage(shadowCtx.canvas, cacheOffsetX + x, cacheOffsetY + y);
+
+    var isInner = (type === "inner" || type === "full");
+    var isOuter = (type === "outer" || type === "full");
+    var operation;
+    if (isInner && isOuter) {
+        operation = "source-over";
+    } else if (isInner) {
+        synCtx.drawImage(cache.canvas, ox, oy);
+        operation = this.filterOperation(true, knockout);
+    } else if (isOuter) {
+        operation = "destination-over";
+    }
+
+    synCtx.globalCompositeOperation = operation;
+    synCtx.drawImage(xorCtx.canvas, 0, 0);
+    if (!isInner && isOuter && knockout) {
+        synCtx.globalCompositeOperation = "destination-out";
+        synCtx.drawImage(cache.canvas, ox, oy);
+    }
+
+    synCtx._offsetX = +(cacheOffsetX + ox);
+    synCtx._offsetY = +(cacheOffsetY + oy);
+
+    this.$cacheStore.destroy(ctx);
+    this.$cacheStore.destroy(highlightCtx);
+    this.$cacheStore.destroy(shadowCtx);
+    this.$cacheStore.destroy(xorCtx);
+
+    return synCtx;
 };
 /**
  * @constructor
@@ -7814,6 +8082,10 @@ Sprite.prototype.hitCheck = function (ctx, matrix, stage, x, y)
 
     return hitObj;
 };
+var ActionScriptVersion = function () {};
+
+ActionScriptVersion.prototype.ACTIONSCRIPT2 = 2;
+ActionScriptVersion.prototype.ACTIONSCRIPT3 = 3;
 /*jshint bitwise: false*/
 /**
  * @constructor
@@ -14054,6 +14326,14 @@ Stage.prototype.touchRender = function ()
     this.render();
     this.renderMain();
 };
+var AntiAliasType = function () {};
+
+var CSMSettings = function () {};
+var Font = function () {};
+var FontStyle = function() {};
+var FontType = function () {};
+var GridFitType = function () {};
+
 /**
  * @constructor
  */
@@ -14332,6 +14612,9 @@ StaticText.prototype.renderHitTest = function (ctx, matrix, stage, x, y)
 
     return hit;
 };
+var StyleSheet = function () {};
+var TextColorType = function () {};
+var TextDisplayMode = function () {};
 /**
  * @param name
  * @param depth
@@ -15808,6 +16091,8 @@ TextField.prototype.renderHitTest = function (ctx, matrix, stage, x, y)
 TextField.prototype.initFrame  = function () {};
 TextField.prototype.addActions = function () {};
 TextField.prototype.getTags    = function () { return undefined; };
+var TextFieldAutoSize = function () {};
+var TextFieldType = function () {};
 /**
  * @constructor
  */
@@ -15832,6 +16117,8 @@ var TextFormat = function ()
     this.url           = null;
     this.target        = null;
 };
+var TextFormatAlign = function () {};
+var TextLineMetrics = function () {};
 /**
  * @constructor
  */
@@ -15888,6 +16175,7 @@ TextRecord.prototype.setData = function (data)
 {
     this.data = data;
 };
+var TextRenderer = function () {};
 /**
  * @constructor
  */
@@ -15964,6 +16252,12 @@ TextSnapshot.prototype.setSelected = function (beginIndex, endIndex, select)
 {
 
 };
+var AVNetworkingParams = function () {};
+var AVURLLoader = function () {};
+var AVURLStream = function () {};
+var Camera = function () {};
+var ID3Info = function () {};
+var Microphone = function () {};
 /**
  * @constructor
  */
@@ -16254,6 +16548,10 @@ Sound.prototype.getBytesTotal = function ()
 {
     return 1;
 };
+var SoundChannel = function () {};
+var SoundCodec = function () {};
+var SoundLoaderContext = function () {};
+var SoundMixer = function () {};
 /**
  * @constructor
  */
@@ -16427,6 +16725,37 @@ SoundTransform.prototype.SoundTransform = function (vol, panning)
     this.volume = vol | 0;
     this.pan    = panning | 0;
 };
+var StageVideo = function () {};
+var StageVideoAvailability = function () {};
+var StageVideoAvailabilityReason = function () {};
+var Video = function () {};
+var VideoStatus = function () {};
+var FileFilter = function () {};
+var FileReference = function () {};
+var FileReferenceList = function () {};
+var GroupSpecifier = function () {};
+var LocalConnection = function () {};
+var NetConnection = function () {};
+var NetGroup = function () {};
+var NetGroupInfo = function () {};
+var NetGroupReceiveMode = function () {};
+
+var NetGroupReplicationStrategy = function () {};
+var NetGroupSendMode = function () {};
+var NetGroupSendResult = function () {};
+var NetStream = function () {};
+var NetStreamAppendBytesAction = function () {};
+var NetStreamInfo = function () {};
+var NetStreamMulticastInfo = function () {};
+var NetStreamPlayOptions = function () {};
+var NetStreamPlayTransitions = function () {};
+var ObjectEncoding = function () {};
+var Responder = function () {};
+var SecureSocket = function () {};
+var SharedObjectFlushStatus = function () {};
+var Socket = function () {};
+var URLLoader = function () {};
+var URLLoaderDataFormat = function () {};
 /**
  * @constructor
  */
@@ -16517,6 +16846,11 @@ URLRequest.prototype.setAuthenticate = function (authenticate)
     this._authenticate = authenticate;
 };
 
+var URLRequestHeader = function () {};
+var URLRequestMethod = function () {};
+var URLStream = function () {};
+var URLVariables = function () {};
+var XMLSocket = function () {};
 /**
  * @param data
  * @param constantPool
@@ -22315,28 +22649,93 @@ Packages.prototype = {
             "MouseEvent": Util.prototype.$clipEvent
         },
         "text": {
+            "AntiAliasType": AntiAliasType,
+            "CSMSettings": CSMSettings,
+            "Font": Font,
+            "FontStyle": FontStyle,
+            "FontType": FontType,
+            "GridFitType": GridFitType,
             "StaticText": StaticText,
+            "StyleSheet": StyleSheet,
+            "TextColorType": TextColorType,
+            "TextDisplayMode": TextDisplayMode,
             "TextField": TextField,
+            "TextFieldAutoSize": TextFieldAutoSize,
+            "TextFieldType": TextFieldType,
             "TextFormat": TextFormat,
+            "TextFormatAlign": TextFormatAlign,
+            "TextLineMetrics": TextLineMetrics,
+            "TextRenderer": TextRenderer,
             "TextSnapshot": TextSnapshot
         },
         "media": {
+            "AVNetworkingParams": AVNetworkingParams,
+            "AVURLLoader": AVURLLoader,
+            "AVURLStream": AVURLStream,
+            "Camera": Camera,
+            "ID3Info": ID3Info,
+            "Microphone": Microphone,
             "Sound": Sound,
-            "SoundTransform": SoundTransform
+            "SoundChannel": SoundChannel,
+            "SoundCodec": SoundCodec,
+            "SoundLoaderContext": SoundLoaderContext,
+            "SoundMixer": SoundMixer,
+            "SoundTransform": SoundTransform,
+            "StageVideo": StageVideo,
+            "StageVideoAvailability": StageVideoAvailability,
+            "StageVideoAvailabilityReason": StageVideoAvailabilityReason,
+            "Video": Video,
+            "VideoStatus": VideoStatus
         },
         "filters": {
-            "DropShadowFilter": DropShadowFilter,
-            "BlurFilter": BlurFilter,
-            "GlowFilter": GlowFilter,
             "BevelFilter": BevelFilter,
-            "GradientGlowFilter": GradientGlowFilter,
-            "ConvolutionFilter": ConvolutionFilter,
+            "BitmapFilter": BitmapFilter,
+            "BitmapFilterQuality": BitmapFilterQuality,
+            "BitmapFilterType": BitmapFilterType,
+            "BlurFilter": BlurFilter,
             "ColorMatrixFilter": ColorMatrixFilter,
+            "ConvolutionFilter": ConvolutionFilter,
+            "DisplacementMapFilter": DisplacementMapFilter,
+            "DisplacementMapFilterMode": DisplacementMapFilterMode,
+            "DropShadowFilter": DropShadowFilter,
+            "GlowFilter": GlowFilter,
             "GradientBevelFilter": GradientBevelFilter,
-            "BitmapFilter": BitmapFilter
+            "GradientGlowFilter": GradientGlowFilter,
+            "ShaderFilter": ShaderFilter
         },
         "net": {
-            "URLRequest": URLRequest
+            "FileFilter": FileFilter,
+            "FileReference": FileReference,
+            "FileReferenceList": FileReferenceList,
+            "GroupSpecifier": GroupSpecifier,
+            "LocalConnection": LocalConnection,
+            "NetConnection": NetConnection,
+            "NetGroup": NetGroup,
+            "NetGroupInfo": NetGroupInfo,
+            "NetGroupReceiveMode": NetGroupReceiveMode,
+            "NetGroupReplicationStrategy": NetGroupReplicationStrategy,
+            "NetGroupSendMode": NetGroupSendMode,
+            "NetGroupSendResult": NetGroupSendResult,
+            "NetStream": NetStream,
+            "NetStreamAppendBytesAction": NetStreamAppendBytesAction,
+            "NetStreamInfo": NetStreamInfo,
+            "NetStreamMulticastInfo": NetStreamMulticastInfo,
+            "NetStreamPlayOptions": NetStreamPlayOptions,
+            "NetStreamPlayTransitions": NetStreamPlayTransitions,
+            "ObjectEncoding": ObjectEncoding,
+            "Responder": Responder,
+            "SecureSocket": SecureSocket,
+            "SharedObject": SharedObject,
+            "SharedObjectFlushStatus": SharedObjectFlushStatus,
+            "Socket": Socket,
+            "URLLoader": URLLoader,
+            "URLLoaderDataFormat": URLLoaderDataFormat,
+            "URLRequest": URLRequest,
+            "URLRequestHeader": URLRequestHeader,
+            "URLRequestMethod": URLRequestMethod,
+            "URLStream": URLStream,
+            "URLVariables": URLVariables,
+            "XMLSocket": XMLSocket
         },
         "system": {
             "fscommand": function ()
@@ -27820,7 +28219,7 @@ SwfTag.prototype.gradientGlowFilter = function ()
 {
     var bitio = this.getBitIO();
 
-    var NumColors = 0 | bitio.getUI8();
+    var NumColors = bitio.getUI8()|0;
 
     var colors = [];
     var alphas = [];
@@ -27911,7 +28310,8 @@ SwfTag.prototype.convolutionFilter = function ()
 SwfTag.prototype.gradientBevelFilter = function ()
 {
     var bitio = this.getBitIO();
-    var NumColors = 0 | bitio.getUI8();
+
+    var NumColors = bitio.getUI8()|0;
 
     var colors = [];
     var alphas = [];
@@ -27920,16 +28320,16 @@ SwfTag.prototype.gradientBevelFilter = function ()
     while (i < NumColors) {
         var rgba = this.rgba();
         alphas[alphas.length] = rgba.A;
-        colors[colors.length] = rgba.R << 16 | rgba.G << 8 | rgba.B;
-        i = 0 | i + 1;
+        colors[colors.length] = (rgba.R << 16 | rgba.G << 8 | rgba.B)|0;
+        i = (i + 1)|0;
     }
 
-    var ratios = [];
 
     i = 0;
+    var ratios = [];
     while (i < NumColors) {
-        ratios[ratios.length] = bitio.getUI8();
-        i = 0 | i + 1;
+        ratios[ratios.length] = +(bitio.getUI8() / 255);
+        i = (i + 1)|0;
     }
 
     var blurX    = bitio.getUI32() / 0x10000;
@@ -27937,7 +28337,6 @@ SwfTag.prototype.gradientBevelFilter = function ()
     var angle    = bitio.getUI32() / 0x10000 * 180 / this.$PI;
     var distance = bitio.getUI32() / 0x10000;
     var strength = bitio.getFloat16() / 256;
-
     var inner    = (bitio.getUIBits(1)) ? true : false;
     var knockout = (bitio.getUIBits(1)) ? true : false;
     bitio.getUIBits(1); // CompositeSource

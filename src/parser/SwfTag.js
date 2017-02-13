@@ -3600,7 +3600,7 @@ SwfTag.prototype.gradientGlowFilter = function ()
 {
     var bitio = this.getBitIO();
 
-    var NumColors = 0 | bitio.getUI8();
+    var NumColors = bitio.getUI8()|0;
 
     var colors = [];
     var alphas = [];
@@ -3691,7 +3691,8 @@ SwfTag.prototype.convolutionFilter = function ()
 SwfTag.prototype.gradientBevelFilter = function ()
 {
     var bitio = this.getBitIO();
-    var NumColors = 0 | bitio.getUI8();
+
+    var NumColors = bitio.getUI8()|0;
 
     var colors = [];
     var alphas = [];
@@ -3700,16 +3701,16 @@ SwfTag.prototype.gradientBevelFilter = function ()
     while (i < NumColors) {
         var rgba = this.rgba();
         alphas[alphas.length] = rgba.A;
-        colors[colors.length] = rgba.R << 16 | rgba.G << 8 | rgba.B;
-        i = 0 | i + 1;
+        colors[colors.length] = (rgba.R << 16 | rgba.G << 8 | rgba.B)|0;
+        i = (i + 1)|0;
     }
 
-    var ratios = [];
 
     i = 0;
+    var ratios = [];
     while (i < NumColors) {
-        ratios[ratios.length] = bitio.getUI8();
-        i = 0 | i + 1;
+        ratios[ratios.length] = +(bitio.getUI8() / 255);
+        i = (i + 1)|0;
     }
 
     var blurX    = bitio.getUI32() / 0x10000;
@@ -3717,7 +3718,6 @@ SwfTag.prototype.gradientBevelFilter = function ()
     var angle    = bitio.getUI32() / 0x10000 * 180 / this.$PI;
     var distance = bitio.getUI32() / 0x10000;
     var strength = bitio.getFloat16() / 256;
-
     var inner    = (bitio.getUIBits(1)) ? true : false;
     var knockout = (bitio.getUIBits(1)) ? true : false;
     bitio.getUIBits(1); // CompositeSource

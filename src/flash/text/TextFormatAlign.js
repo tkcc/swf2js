@@ -1,0 +1,1 @@
+var TextFormatAlign = function () {};

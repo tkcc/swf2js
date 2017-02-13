@@ -17,137 +17,136 @@ EventDispatcher.prototype.constructor = EventDispatcher;
 /**
  * properties
  */
-Object.defineProperties(EventDispatcher.prototype,
-    {
-        onEnterFrame: {
-            get: function () {
-                return this.getOnEvent("onEnterFrame");
-            },
-            set: function (onEnterFrame) {
-                this.setOnEvent("onEnterFrame", onEnterFrame);
-            }
+Object.defineProperties(EventDispatcher.prototype, {
+    onEnterFrame: {
+        get: function () {
+            return this.getOnEvent("onEnterFrame");
         },
-        onPress: {
-            get: function () {
-                return this.getOnEvent("onPress");
-            },
-            set: function (onPress) {
-                this.setOnEvent("onPress", onPress);
-            }
-        },
-        onRelease: {
-            get: function () {
-                return this.getOnEvent("onRelease");
-            },
-            set: function (onRelease) {
-                this.setOnEvent("onRelease", onRelease);
-            }
-        },
-        onReleaseOutside: {
-            get: function () {
-                return this.getOnEvent("onReleaseOutside");
-            },
-            set: function (onReleaseOutside) {
-                this.setOnEvent("onReleaseOutside", onReleaseOutside);
-            }
-        },
-        onRollOver: {
-            get: function () {
-                return this.getOnEvent("onRollOver");
-            },
-            set: function (onRollOver) {
-                this.setOnEvent("onRollOver", onRollOver);
-            }
-        },
-        onRollOut: {
-            get: function () {
-                return this.getOnEvent("onRollOut");
-            },
-            set: function (onRollOut) {
-                this.setOnEvent("onRollOut", onRollOut);
-            }
-        },
-        onData: {
-            get: function () {
-                return this.getOnEvent("onData");
-            },
-            set: function (onData) {
-                this.setOnEvent("onData", onData);
-            }
-        },
-        onMouseDown: {
-            get: function () {
-                return this.getOnEvent("onMouseDown");
-            },
-            set: function (onMouseDown) {
-                this.setOnEvent("onMouseDown", onMouseDown);
-            }
-        },
-        onMouseUp: {
-            get: function () {
-                return this.getOnEvent("onMouseUp");
-            },
-            set: function (onMouseUp) {
-                this.setOnEvent("onMouseUp", onMouseUp);
-            }
-        },
-        onMouseMove: {
-            get: function () {
-                return this.getOnEvent("onMouseMove");
-            },
-            set: function (onMouseMove) {
-                this.setOnEvent("onMouseMove", onMouseMove);
-            }
-        },
-        onDragOut: {
-            get: function () {
-                return this.getOnEvent("onDragOut");
-            },
-            set: function (onDragOut) {
-                this.setOnEvent("onDragOut", onDragOut);
-            }
-        },
-        onDragOver: {
-            get: function () {
-                return this.getOnEvent("onDragOver");
-            },
-            set: function (onDragOver) {
-                this.setOnEvent("onDragOver", onDragOver);
-            }
-        },
-        onKeyDown: {
-            get: function () {
-                return this.getOnEvent("onKeyDown");
-            },
-            set: function (onKeyDown) {
-                this.setOnEvent("onKeyDown", onKeyDown);
-            }
-        },
-        onKeyUp: {
-            get: function () {
-                return this.getOnEvent("onKeyUp");
-            },
-            set: function (onKeyUp) {
-                this.setOnEvent("onKeyUp", onKeyUp);
-            }
-        },
-        onLoad: {
-            get: function () {
-                return this.getOnEvent("onLoad");
-            },
-            set: function (onLoad) {
-                this.setOnEvent("onLoad", onLoad);
-            }
-        },
-        onUnLoad: {
-            get: function () {
-                return this.getOnEvent("onUnLoad");
-            },
-            set: function (onUnLoad) {
-                this.setOnEvent("onUnLoad", onUnLoad);
-            }
+        set: function (onEnterFrame) {
+            this.setOnEvent("onEnterFrame", onEnterFrame);
         }
-    });
+    },
+    onPress: {
+        get: function () {
+            return this.getOnEvent("onPress");
+        },
+        set: function (onPress) {
+            this.setOnEvent("onPress", onPress);
+        }
+    },
+    onRelease: {
+        get: function () {
+            return this.getOnEvent("onRelease");
+        },
+        set: function (onRelease) {
+            this.setOnEvent("onRelease", onRelease);
+        }
+    },
+    onReleaseOutside: {
+        get: function () {
+            return this.getOnEvent("onReleaseOutside");
+        },
+        set: function (onReleaseOutside) {
+            this.setOnEvent("onReleaseOutside", onReleaseOutside);
+        }
+    },
+    onRollOver: {
+        get: function () {
+            return this.getOnEvent("onRollOver");
+        },
+        set: function (onRollOver) {
+            this.setOnEvent("onRollOver", onRollOver);
+        }
+    },
+    onRollOut: {
+        get: function () {
+            return this.getOnEvent("onRollOut");
+        },
+        set: function (onRollOut) {
+            this.setOnEvent("onRollOut", onRollOut);
+        }
+    },
+    onData: {
+        get: function () {
+            return this.getOnEvent("onData");
+        },
+        set: function (onData) {
+            this.setOnEvent("onData", onData);
+        }
+    },
+    onMouseDown: {
+        get: function () {
+            return this.getOnEvent("onMouseDown");
+        },
+        set: function (onMouseDown) {
+            this.setOnEvent("onMouseDown", onMouseDown);
+        }
+    },
+    onMouseUp: {
+        get: function () {
+            return this.getOnEvent("onMouseUp");
+        },
+        set: function (onMouseUp) {
+            this.setOnEvent("onMouseUp", onMouseUp);
+        }
+    },
+    onMouseMove: {
+        get: function () {
+            return this.getOnEvent("onMouseMove");
+        },
+        set: function (onMouseMove) {
+            this.setOnEvent("onMouseMove", onMouseMove);
+        }
+    },
+    onDragOut: {
+        get: function () {
+            return this.getOnEvent("onDragOut");
+        },
+        set: function (onDragOut) {
+            this.setOnEvent("onDragOut", onDragOut);
+        }
+    },
+    onDragOver: {
+        get: function () {
+            return this.getOnEvent("onDragOver");
+        },
+        set: function (onDragOver) {
+            this.setOnEvent("onDragOver", onDragOver);
+        }
+    },
+    onKeyDown: {
+        get: function () {
+            return this.getOnEvent("onKeyDown");
+        },
+        set: function (onKeyDown) {
+            this.setOnEvent("onKeyDown", onKeyDown);
+        }
+    },
+    onKeyUp: {
+        get: function () {
+            return this.getOnEvent("onKeyUp");
+        },
+        set: function (onKeyUp) {
+            this.setOnEvent("onKeyUp", onKeyUp);
+        }
+    },
+    onLoad: {
+        get: function () {
+            return this.getOnEvent("onLoad");
+        },
+        set: function (onLoad) {
+            this.setOnEvent("onLoad", onLoad);
+        }
+    },
+    onUnLoad: {
+        get: function () {
+            return this.getOnEvent("onUnLoad");
+        },
+        set: function (onUnLoad) {
+            this.setOnEvent("onUnLoad", onUnLoad);
+        }
+    }
+});
 
 /**
  * @param type

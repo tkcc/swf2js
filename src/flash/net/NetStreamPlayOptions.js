@@ -1,0 +1,1 @@
+var NetStreamPlayOptions = function () {};

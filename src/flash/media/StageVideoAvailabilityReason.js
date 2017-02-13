@@ -1,0 +1,1 @@
+var StageVideoAvailabilityReason = function () {};

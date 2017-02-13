@@ -1,0 +1,1 @@
+var NetStream = function () {};

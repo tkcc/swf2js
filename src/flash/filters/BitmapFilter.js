@@ -7,7 +7,7 @@ var BitmapFilter = function () {};
 /**
  * util
  */
-BitmapFilter.prototype = Object.create(Util.prototype);
+BitmapFilter.prototype = Object.create(OriginalObject.prototype);
 BitmapFilter.prototype.constructor = BitmapFilter;
 
 /**

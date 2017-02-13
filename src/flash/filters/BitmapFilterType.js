@@ -1,0 +1,1 @@
+var BitmapFilterType = function () {};

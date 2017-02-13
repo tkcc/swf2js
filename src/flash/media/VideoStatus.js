@@ -1,0 +1,1 @@
+var VideoStatus = function () {};

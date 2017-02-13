@@ -1,0 +1,1 @@
+var Video = function () {};

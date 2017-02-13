@@ -1,0 +1,1 @@
+var GroupSpecifier = function () {};
