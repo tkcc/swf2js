@@ -142,5 +142,7 @@ Object.defineProperties(BevelFilter.prototype, {
  */
 ConvolutionFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
+
+
     return cache;
 };

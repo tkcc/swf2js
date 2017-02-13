@@ -3609,16 +3609,15 @@ SwfTag.prototype.gradientGlowFilter = function ()
     while (i < NumColors) {
         var rgba = this.rgba();
         alphas[alphas.length] = rgba.A;
-        colors[colors.length] = rgba.R << 16 | rgba.G << 8 | rgba.B;
-        i = 0 | i + 1;
+        colors[colors.length] = (rgba.R << 16 | rgba.G << 8 | rgba.B)|0;
+        i = (i + 1)|0;
     }
 
-    var ratios = [];
-
     i = 0;
+    var ratios = [];
     while (i < NumColors) {
-        ratios[ratios.length] = bitio.getUI8();
-        i = 0 | i + 1;
+        ratios[ratios.length] = +(bitio.getUI8() / 255);
+        i = (i + 1)|0;
     }
 
     var blurX    = bitio.getUI32() / 0x10000;
@@ -3659,25 +3658,30 @@ SwfTag.prototype.convolutionFilter = function ()
 {
     var bitio = this.getBitIO();
 
-    var obj = {};
-    obj.MatrixX = bitio.getUI8();
-    obj.MatrixY = bitio.getUI8();
-    obj.Divisor = bitio.getFloat16() | bitio.getFloat16();
-    obj.Bias    = bitio.getFloat16() | bitio.getFloat16();
+    var matrixX = bitio.getUI8();
+    var matrixY = bitio.getUI8();
+    var divisor = bitio.getFloat32;
+    var bias    = bitio.getFloat32;
 
-    var count = obj.MatrixX * obj.MatrixY;
-    var MatrixArr = [];
-    while (count--) {
-        MatrixArr[MatrixArr.length] = bitio.getUI32();
+    // matrix
+    var count = matrixX * matrixY;
+    var matrix = [];
+    while (count) {
+        count = (count - 1)|0;
+        matrix[matrix.length] = bitio.getFloat32();
     }
 
-    obj.DefaultColor = this.rgba();
-    bitio.getUIBits(6); // Reserved
+    var color = this.rgba();
 
-    obj.Clamp         = bitio.getUIBits(1);
-    obj.PreserveAlpha = bitio.getUIBits(1);
+    // Reserved
+    bitio.getUIBits(6);
+
+    var clamp         = (bitio.getUIBits(1)) ? true :false;
+    var preserveAlpha = (bitio.getUIBits(1)) ? true :false;
 
     return new ConvolutionFilter(
+        matrixX, matrixY, matrix, divisor, bias,
+        preserveAlpha, clamp, color
     );
 };
 
