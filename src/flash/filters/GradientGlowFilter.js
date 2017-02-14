@@ -218,6 +218,13 @@ GradientGlowFilter.prototype.render = function (cache, matrix, colorTransform, s
 
     var blurFilter = new BlurFilter(blurX, blurY, quality);
     var ctx = blurFilter.render(cache, matrix, colorTransform, stage);
+    if (strength > 0) {
+        i = 1;
+        while (i < strength) {
+            i = (i + 1)|0;
+            ctx.drawImage(ctx.canvas, 0, 0);
+        }
+    }
 
     // synthesis
     var cacheOffsetX = cache._offsetX;
@@ -226,9 +233,6 @@ GradientGlowFilter.prototype.render = function (cache, matrix, colorTransform, s
     var _offsetY     = ctx._offsetY;
 
     var canvas = ctx.canvas;
-    var width  = (canvas.width  + cacheOffsetX)|0;
-    var height = (canvas.height + cacheOffsetY)|0;
-
     imageData  = ctx.getImageData(0, 0, canvas.width, canvas.height);
     var pxData = imageData.data;
 
@@ -238,7 +242,7 @@ GradientGlowFilter.prototype.render = function (cache, matrix, colorTransform, s
     while (i < length) {
         idx  = (pxData[i + 3] * 4)|0;
         if (idx) {
-            pxData[i   ]  = pxGrad[idx    ];
+            pxData[i    ] = pxGrad[idx    ];
             pxData[i + 1] = pxGrad[idx + 1];
             pxData[i + 2] = pxGrad[idx + 2];
         }
@@ -254,8 +258,10 @@ GradientGlowFilter.prototype.render = function (cache, matrix, colorTransform, s
     var x = this.$ceil(this.$cos(r) * distance * scale * stage.ratio)|0;
     var y = this.$ceil(this.$sin(r) * distance * scale * stage.ratio)|0;
 
-    width  = (width  + this.$abs(x))|0;
-    height = (height + this.$abs(y))|0;
+    var width  = (canvas.width  + cacheOffsetX)|0;
+    var height = (canvas.height + cacheOffsetY)|0;
+    width      = (width  + this.$abs(x))|0;
+    height     = (height + this.$abs(y))|0;
 
     var cx = _offsetX;
     var cy = _offsetY;
@@ -273,7 +279,7 @@ GradientGlowFilter.prototype.render = function (cache, matrix, colorTransform, s
         dy = y|0;
     }
 
-    var synCanvas = this.$cacheStore.getCanvas();
+    var synCanvas    = this.$cacheStore.getCanvas();
     synCanvas.width  = width|0;
     synCanvas.height = height|0;
 
@@ -301,6 +307,7 @@ GradientGlowFilter.prototype.render = function (cache, matrix, colorTransform, s
 
     synCtx.globalCompositeOperation = operation;
     synCtx.drawImage(canvas, cacheOffsetX + dx, cacheOffsetY + dy);
+
     if (!isInner && isOuter && knockout) {
         synCtx.globalCompositeOperation = "destination-out";
         synCtx.drawImage(cache.canvas, cx, cy);

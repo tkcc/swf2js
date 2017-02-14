@@ -95,9 +95,6 @@ BitmapFilter.prototype.coatOfColor = function (ctx, color, inner, strength)
     return ctx;
 };
 
-
-
-
 /**
  * clone
  */

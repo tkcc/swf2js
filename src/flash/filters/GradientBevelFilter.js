@@ -26,12 +26,12 @@ var GradientBevelFilter = function ()
     this.colors   = arg[2];
     this.alphas   = arg[3];
     this.ratios   = arg[4];
-    this.blurX    = arg[6];
-    this.blurY    = arg[7];
-    this.strength = arg[8];
-    this.quality  = arg[9];
-    this.type     = arg[10];
-    this.knockout = arg[11];
+    this.blurX    = arg[5];
+    this.blurY    = arg[6];
+    this.strength = arg[7];
+    this.quality  = arg[8];
+    this.type     = arg[9];
+    this.knockout = arg[10];
 };
 
 /**
@@ -175,50 +175,108 @@ Object.defineProperties(GradientBevelFilter.prototype, {
  */
 GradientBevelFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
-    var filterColor, color;
+    var length, i, css, color, rgba, imageData, pxGrad, pxData, idx;;
 
-    var angle          = this.angle;
-    var shadowColor    = this.shadowColor;
-    var shadowAlpha    = this.shadowAlpha;
-    var highlightColor = this.highlightColor;
-    var highlightAlpha = this.highlightAlpha;
-    var blurX          = this.blurX;
-    var blurY          = this.blurY;
-    var strength       = this.strength;
-    var quality        = this.quality;
-    var knockout       = this.knockout;
-    var type           = this.type;
+    var angle    = this.angle;
+    var blurX    = this.blurX;
+    var blurY    = this.blurY;
+    var strength = this.strength;
+    var quality  = this.quality;
+    var knockout = this.knockout;
+    var type     = this.type;
 
     var r = +(angle * this.$PI / 180);
 
     // blur
     var blurFilter = new BlurFilter(blurX, blurY, quality);
     var ctx        = blurFilter.render(cache, matrix, colorTransform, stage);
+    if (strength > 0) {
+        i = 1;
+        while (i < strength) {
+            i = (i + 1)|0;
+            ctx.drawImage(ctx.canvas, 0, 0);
+        }
+    }
+
     var canvas     = ctx.canvas;
     var _offsetX   = ctx._offsetX;
     var _offsetY   = ctx._offsetY;
+
+    // gradient
+    var ratios = this.ratios;
+    var colors = this.colors;
+    var alphas = this.alphas;
+
+    // shadow gradient canvas
+    var gCanvas    = this.$cacheStore.getCanvas();
+    gCanvas.width  = 512;
+    gCanvas.heigth = 1;
+    var gCtx       = gCanvas.getContext("2d");
+
+    css    = gCtx.createLinearGradient(0, 0, 511, 0);
+    length = ratios.length;
+
+    i = 0;
+    while (i < length) {
+        color = this.$intToRGBA(colors[i], alphas[i] * 100);
+        color = this.$generateColorTransform(color, colorTransform);
+        rgba  = "rgba("+color.R+","+color.G+","+color.B+","+color.A+")";
+
+        // set
+        css.addColorStop(ratios[i], rgba);
+
+        i = (i + 1)|0;
+    }
+    gCtx.fillStyle = css;
+    gCtx.fillRect(0, 0, 512, 1);
+    imageData = gCtx.getImageData(0, 0, 512, 1);
+    pxGrad    = imageData.data;
 
     // shadow
     var shadowCanvas    = this.$cacheStore.getCanvas();
     shadowCanvas.width  = canvas.width|0;
     shadowCanvas.height = canvas.height|0;
     var shadowCtx       = shadowCanvas.getContext("2d");
-    shadowCtx.drawImage(canvas, 0, 0);
 
-    filterColor        = this.$intToRGBA(shadowColor);
-    color              = this.$generateColorTransform(filterColor, colorTransform);
-    shadowCtx          = this.coatOfColor(shadowCtx, color, false, strength);
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    pxData    = imageData.data;
+
+    i = 0;
+    length = pxData.length;
+    while (i < length) {
+        idx = ((256 - pxData[i + 3]) * 4)|0;
+        if (idx) {
+            pxData[i    ] = pxGrad[idx    ];
+            pxData[i + 1] = pxGrad[idx + 1];
+            pxData[i + 2] = pxGrad[idx + 2];
+        }
+
+        i = (i + 4)|0;
+    }
+    shadowCtx.putImageData(imageData, 0, 0);
 
     // highlight
     var highlightCanvas    = this.$cacheStore.getCanvas();
     highlightCanvas.width  = canvas.width;
     highlightCanvas.height = canvas.height;
     var highlightCtx       = highlightCanvas.getContext("2d");
-    highlightCtx.drawImage(canvas, 0, 0);
 
-    filterColor           = this.$intToRGBA(highlightColor);
-    color                 = this.$generateColorTransform(filterColor, colorTransform);
-    highlightCtx          = this.coatOfColor(highlightCtx, color, false, strength);
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    pxData    = imageData.data;
+
+    i = 0;
+    length = pxData.length;
+    while (i < length) {
+        idx = ((255 + pxData[i + 3]) * 4)|0;
+        if (idx) {
+            pxData[i    ] = pxGrad[idx    ];
+            pxData[i + 1] = pxGrad[idx + 1];
+            pxData[i + 2] = pxGrad[idx + 2];
+        }
+
+        i = (i + 4)|0;
+    }
+    highlightCtx.putImageData(imageData, 0, 0);
 
     var cacheOffsetX = cache._offsetX;
     var cacheOffsetY = cache._offsetY;
@@ -259,11 +317,9 @@ GradientBevelFilter.prototype.render = function (cache, matrix, colorTransform, 
     xorCtx.globalCompositeOperation = "xor";
 
     // highlight
-    xorCtx.globalAlpha = highlightAlpha;
     xorCtx.drawImage(highlightCtx.canvas, cacheOffsetX - x, cacheOffsetY - y);
 
     // shadow
-    xorCtx.globalAlpha = shadowAlpha;
     xorCtx.drawImage(shadowCtx.canvas, cacheOffsetX + x, cacheOffsetY + y);
 
     var isInner = (type === "inner" || type === "full");
