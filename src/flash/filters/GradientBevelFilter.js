@@ -175,7 +175,7 @@ Object.defineProperties(GradientBevelFilter.prototype, {
  */
 GradientBevelFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 {
-    var length, i, css, color, rgba, imageData, pxGrad, pxData, idx;;
+    var length, i, css, color, rgba, imageData, pxGrad, pxData, idx;
 
     var angle    = this.angle;
     var blurX    = this.blurX;
@@ -201,6 +201,36 @@ GradientBevelFilter.prototype.render = function (cache, matrix, colorTransform, 
     var canvas     = ctx.canvas;
     var _offsetX   = ctx._offsetX;
     var _offsetY   = ctx._offsetY;
+
+    var cacheOffsetX = cache._offsetX;
+    var cacheOffsetY = cache._offsetY;
+
+    var width  = (canvas.width  + cacheOffsetX)|0;
+    var height = (canvas.height + cacheOffsetY)|0;
+
+    var distance = this.distance;
+    var scale    = stage.getScale();
+    var x = this.$ceil(this.$cos(r) * distance * scale * stage.ratio)|0;
+    var y = this.$ceil(this.$sin(r) * distance * scale * stage.ratio)|0;
+
+    var ox = _offsetX + this.$abs(x);
+    var oy = _offsetY + this.$abs(y);
+
+    width  = (width  + this.$abs(x) * 2)|0;
+    height = (height + this.$abs(y) * 2)|0;
+
+    var synCanvas    = this.$cacheStore.getCanvas();
+    synCanvas.width  = width|0;
+    synCanvas.height = height|0;
+    var synCtx       = synCanvas.getContext("2d");
+
+    if (!knockout) {
+        synCtx.drawImage(cache.canvas, ox, oy);
+    }
+
+    if (strength < 1) {
+        synCtx.globalAlpha = +(synCtx.globalAlpha * strength);
+    }
 
     // gradient
     var ratios = this.ratios;
@@ -234,11 +264,18 @@ GradientBevelFilter.prototype.render = function (cache, matrix, colorTransform, 
 
     // shadow
     var shadowCanvas    = this.$cacheStore.getCanvas();
-    shadowCanvas.width  = canvas.width|0;
-    shadowCanvas.height = canvas.height|0;
+    shadowCanvas.width  = width|0;
+    shadowCanvas.height = height|0;
     var shadowCtx       = shadowCanvas.getContext("2d");
+    shadowCtx.setTransform(1,0,0,1,this.$abs(x),this.$abs(y));
+    shadowCtx.globalCompositeOperation = "source-out";
 
-    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    // highlight
+    shadowCtx.drawImage(canvas, cacheOffsetX - x, cacheOffsetY - y);
+    // shadow
+    shadowCtx.drawImage(canvas, cacheOffsetX + x, cacheOffsetY + y);
+
+    imageData = shadowCtx.getImageData(0, 0, width, height);
     pxData    = imageData.data;
 
     i = 0;
@@ -257,11 +294,18 @@ GradientBevelFilter.prototype.render = function (cache, matrix, colorTransform, 
 
     // highlight
     var highlightCanvas    = this.$cacheStore.getCanvas();
-    highlightCanvas.width  = canvas.width;
-    highlightCanvas.height = canvas.height;
+    highlightCanvas.width  = width|0;
+    highlightCanvas.height = height|0;
     var highlightCtx       = highlightCanvas.getContext("2d");
+    highlightCtx.setTransform(1,0,0,1,this.$abs(x),this.$abs(y));
+    highlightCtx.globalCompositeOperation = "source-out";
 
-    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    // shadow
+    highlightCtx.drawImage(canvas, cacheOffsetX + x, cacheOffsetY + y);
+    // highlight
+    highlightCtx.drawImage(canvas, cacheOffsetX - x, cacheOffsetY - y);
+
+    imageData = highlightCtx.getImageData(0, 0, width, height);
     pxData    = imageData.data;
 
     i = 0;
@@ -278,49 +322,16 @@ GradientBevelFilter.prototype.render = function (cache, matrix, colorTransform, 
     }
     highlightCtx.putImageData(imageData, 0, 0);
 
-    var cacheOffsetX = cache._offsetX;
-    var cacheOffsetY = cache._offsetY;
-
-    var width  = (canvas.width  + cacheOffsetX)|0;
-    var height = (canvas.height + cacheOffsetY)|0;
-
-    var distance = this.distance;
-    var scale    = stage.getScale();
-    var x = this.$ceil(this.$cos(r) * distance * scale * stage.ratio)|0;
-    var y = this.$ceil(this.$sin(r) * distance * scale * stage.ratio)|0;
-
-    var ox = _offsetX + this.$abs(x);
-    var oy = _offsetY + this.$abs(y);
-
-    width  = (width  + this.$abs(x) * 2)|0;
-    height = (height + this.$abs(y) * 2)|0;
-
-    var synCanvas    = this.$cacheStore.getCanvas();
-    synCanvas.width  = width|0;
-    synCanvas.height = height|0;
-    var synCtx       = synCanvas.getContext("2d");
-
-    if (!knockout) {
-        synCtx.drawImage(cache.canvas, ox, oy);
-    }
-
-    if (strength < 1) {
-        synCtx.globalAlpha = +(synCtx.globalAlpha * strength);
-    }
-
     var xorCanvas = this.$cacheStore.getCanvas();
     xorCanvas.width  = width|0;
     xorCanvas.height = height|0;
 
     var xorCtx = xorCanvas.getContext("2d");
-    xorCtx.setTransform(1,0,0,1,this.$abs(x),this.$abs(y));
     xorCtx.globalCompositeOperation = "xor";
-
     // highlight
-    xorCtx.drawImage(highlightCtx.canvas, cacheOffsetX - x, cacheOffsetY - y);
-
+    xorCtx.drawImage(highlightCtx.canvas, 0, 0);
     // shadow
-    xorCtx.drawImage(shadowCtx.canvas, cacheOffsetX + x, cacheOffsetY + y);
+    xorCtx.drawImage(shadowCtx.canvas, 0, 0);
 
     var isInner = (type === "inner" || type === "full");
     var isOuter = (type === "outer" || type === "full");

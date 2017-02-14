@@ -2169,7 +2169,8 @@ DisplayObject.prototype.renderBlend = function (ctx, cache, xMin, yMin, isFilter
     cache.setTransform(1, 0, 0, 1, 0, 0);
 
     switch (mode) {
-        case "source-over":
+        case "alpha":
+            return ;
             break;
         case "multiply":
             operation = "multiply";
@@ -2219,7 +2220,11 @@ DisplayObject.prototype.renderBlend = function (ctx, cache, xMin, yMin, isFilter
         case "hardlight":
             operation = "hard-light";
             break;
+        default:
+            break;
     }
+
+    canvas = cache.canvas;
 
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = operation;
