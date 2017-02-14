@@ -2604,8 +2604,14 @@ BevelFilter.prototype.render = function (cache, matrix, colorTransform, stage)
     return synCtx;
 };
 var BitmapFilterQuality = function () {};
+BitmapFilterQuality.prototype.LOW    = 1;
+BitmapFilterQuality.prototype.MEDIUM = 2;
+BitmapFilterQuality.prototype.HIGH   = 3;
 
 var BitmapFilterType = function () {};
+BitmapFilterType.prototype.FULL  = "full";
+BitmapFilterType.prototype.INNER = "inner";
+BitmapFilterType.prototype.OUTER = "outer";
 /**
  * @constructor
  */
@@ -3218,6 +3224,10 @@ ConvolutionFilter.prototype.render = function (cache, matrix, colorTransform, st
 };
 var DisplacementMapFilter = function () {};
 var DisplacementMapFilterMode = function () {};
+DisplacementMapFilterMode.prototype.CLAMP  = "clamp";
+DisplacementMapFilterMode.prototype.COLOR  = "color";
+DisplacementMapFilterMode.prototype.IGNORE = "ignore";
+DisplacementMapFilterMode.prototype.WRAP   = "wrap";
 /**
  * @constructor
  */
