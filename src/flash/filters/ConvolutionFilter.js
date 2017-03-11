@@ -10,12 +10,12 @@ var ConvolutionFilter = function ()
     this._matrixX       = 0;
     this._matrixY       = 0;
     this._matrix        = null;
-    this._divisor       = 0;
-    this._bias          = 0;
+    this._divisor       = 1.0;
+    this._bias          = 0.0;
     this._preserveAlpha = true;
     this._clamp         = true;
     this._color         = 0;
-    this._alpha         = 0;
+    this._alpha         = 0.0;
 
     var arg = arguments;
     this.matrixX       = arg[0];

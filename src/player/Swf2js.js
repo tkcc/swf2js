@@ -50,15 +50,24 @@ Swf2js.prototype.ColorMatrixFilter = ColorMatrixFilter;
 Swf2js.prototype.GradientBevelFilter = GradientBevelFilter;
 
 /**
+ * @type {ConvolutionFilter}
+ */
+Swf2js.prototype.ConvolutionFilter = ConvolutionFilter;
+
+/**
+ * @type {ShaderFilter}
+ */
+Swf2js.prototype.ShaderFilter = ShaderFilter;
+
+/**
+ * @type {DisplacementMapFilter}
+ */
+Swf2js.prototype.DisplacementMapFilter = DisplacementMapFilter;
+
+/**
  * @type {BitmapFilter}
  */
 Swf2js.prototype.BitmapFilter = BitmapFilter;
-
-/**
- * @type {LoadVars}
- */
-Swf2js.prototype.LoadVars = LoadVars;
-
 
 /**
  * @param url
