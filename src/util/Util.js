@@ -154,7 +154,7 @@ var instanceId = 0;
 
             audio.play();
         }
-    }
+    };
 
     /**
      * resize

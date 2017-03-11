@@ -3,9 +3,9 @@
  */
 var CacheStore = function ()
 {
-    this.pool    = [];
-    this.store   = [];
-    this.size    = 73400320;
+    this.pool  = [];
+    this.store = [];
+    this.size  = 73400320;
 };
 
 /**
@@ -117,11 +117,13 @@ CacheStore.prototype.generateKey = function (id, matrix, cxForm)
     }
 
     // colorTransform
-    var c0 = this.$sqrt(cxForm[0] * cxForm[0] + cxForm[4] * cxForm[4]);
-    var c1 = this.$sqrt(cxForm[1] * cxForm[1] + cxForm[5] * cxForm[5]);
-    var c2 = this.$sqrt(cxForm[2] * cxForm[2] + cxForm[6] * cxForm[6]);
-    var c3 = this.$sqrt(cxForm[3] * cxForm[3] + cxForm[7] * cxForm[7]);
-    var cx = this.$sqrt(c0 * c1 + c2 * c3);
+    var c0  = this.$sqrt(cxForm[0] * cxForm[0] + cxForm[4] * cxForm[4]);
+    var c1  = this.$sqrt(cxForm[1] * cxForm[1] + cxForm[5] * cxForm[5]);
+    var c2  = this.$sqrt(cxForm[2] * cxForm[2] + cxForm[6] * cxForm[6]);
+    var c3  = this.$sqrt(cxForm[3] * cxForm[3] + cxForm[7] * cxForm[7]);
+    var c01 = this.$sqrt(c0 * c0 + c1 * c1);
+    var c23 = this.$sqrt(c2 * c2 + c3 * c3);
+    var cx  = this.$sqrt(c01 * c01 + c23 * c23);
 
     return id + "_" + this.$sqrt(m * m + cx * cx);
 };

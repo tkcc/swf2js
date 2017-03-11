@@ -65,16 +65,32 @@ ColorMatrixFilter.prototype.render = function (cache, matrix, colorTransform, st
     var length    = pxData.length;
 
     // red
-    var m0 =  mtx[0],  m1  = mtx[1],  m2  = mtx[2],  m3  = mtx[3],  m4  = mtx[4];
+    var m0 = mtx[0],
+        m1 = mtx[1],
+        m2 = mtx[2],
+        m3 = mtx[3],
+        m4 = mtx[4];
 
     // green
-    var m5 =  mtx[5],  m6  = mtx[6],  m7  = mtx[7],  m8  = mtx[8],  m9  = mtx[9];
+    var m5 = mtx[5],
+        m6 = mtx[6],
+        m7 = mtx[7],
+        m8 = mtx[8],
+        m9 = mtx[9];
 
     // blue
-    var m10 = mtx[10], m11 = mtx[11], m12 = mtx[12], m13 = mtx[13], m14 = mtx[14];
+    var m10 = mtx[10],
+        m11 = mtx[11],
+        m12 = mtx[12],
+        m13 = mtx[13],
+        m14 = mtx[14];
 
     // alpha
-    var m15 = mtx[15], m16 = mtx[16], m17 = mtx[17], m18 = mtx[18], m19 = mtx[19];
+    var m15 = mtx[15],
+        m16 = mtx[16],
+        m17 = mtx[17],
+        m18 = mtx[18],
+        m19 = mtx[19];
 
     var R, G, B, A;
     var i = 0;

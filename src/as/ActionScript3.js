@@ -1069,10 +1069,6 @@ ActionScript3.prototype.ActionCallPropVoid = function (stack, index, argCount)
         obj = _this.stage;
     }
 
-    if (this.id==151) {
-        console.log(obj, params,this)
-    }
-
     if (func) {
         func.apply(obj, params);
     }
@@ -2097,9 +2093,6 @@ ActionScript3.prototype.ActionInitProperty = function (stack, index)
     var value = stack.pop();
     var prop = this.names[index];
     var obj = stack.pop();
-    if (this.id==148) {
-        console.log(prop, obj, this)
-    }
     if (obj) {
         if (obj instanceof DisplayObject) {
             obj.setProperty(prop, value);

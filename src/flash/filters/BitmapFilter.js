@@ -1,5 +1,4 @@
 /**
- *
  * @constructor
  */
 var BitmapFilter = function () {};

@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 var DisplacementMapFilterMode = function () {};
 DisplacementMapFilterMode.prototype.CLAMP  = "clamp";
 DisplacementMapFilterMode.prototype.COLOR  = "color";

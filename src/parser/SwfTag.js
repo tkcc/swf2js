@@ -4007,7 +4007,7 @@ SwfTag.prototype.parseDoABC = function (tagType, length)
     var classCount = 0 | ABCBitIO.getU30();
     obj.instance   = [];
     obj.class      = [];
-    console.log(classCount)
+    console.log(classCount);
     if (classCount) {
         // instance_info
         var instance = [];
@@ -4016,7 +4016,7 @@ SwfTag.prototype.parseDoABC = function (tagType, length)
             instance[i] = this.ABCInstanceInfo(ABCBitIO);
             i = 0 | i + 1;
         }
-        console.log(instance)
+        console.log(instance);
         obj.instance = instance;
 
         // class_info

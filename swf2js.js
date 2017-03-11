@@ -463,7 +463,7 @@ var instanceId = 0;
 
             audio.play();
         }
-    }
+    };
 
     /**
      * resize
@@ -2153,7 +2153,6 @@ EventDispatcher.prototype.setActionQueue = function (as, stage, args)
 };
 
 /**
- *
  * @constructor
  */
 var BitmapFilter = function () {};
@@ -2603,11 +2602,17 @@ BevelFilter.prototype.render = function (cache, matrix, colorTransform, stage)
 
     return synCtx;
 };
+/**
+ * @constructor
+ */
 var BitmapFilterQuality = function () {};
 BitmapFilterQuality.prototype.LOW    = 1;
 BitmapFilterQuality.prototype.MEDIUM = 2;
 BitmapFilterQuality.prototype.HIGH   = 3;
 
+/**
+ * @constructor
+ */
 var BitmapFilterType = function () {};
 BitmapFilterType.prototype.FULL  = "full";
 BitmapFilterType.prototype.INNER = "inner";
@@ -3039,16 +3044,32 @@ ColorMatrixFilter.prototype.render = function (cache, matrix, colorTransform, st
     var length    = pxData.length;
 
     // red
-    var m0 =  mtx[0],  m1  = mtx[1],  m2  = mtx[2],  m3  = mtx[3],  m4  = mtx[4];
+    var m0 = mtx[0],
+        m1 = mtx[1],
+        m2 = mtx[2],
+        m3 = mtx[3],
+        m4 = mtx[4];
 
     // green
-    var m5 =  mtx[5],  m6  = mtx[6],  m7  = mtx[7],  m8  = mtx[8],  m9  = mtx[9];
+    var m5 = mtx[5],
+        m6 = mtx[6],
+        m7 = mtx[7],
+        m8 = mtx[8],
+        m9 = mtx[9];
 
     // blue
-    var m10 = mtx[10], m11 = mtx[11], m12 = mtx[12], m13 = mtx[13], m14 = mtx[14];
+    var m10 = mtx[10],
+        m11 = mtx[11],
+        m12 = mtx[12],
+        m13 = mtx[13],
+        m14 = mtx[14];
 
     // alpha
-    var m15 = mtx[15], m16 = mtx[16], m17 = mtx[17], m18 = mtx[18], m19 = mtx[19];
+    var m15 = mtx[15],
+        m16 = mtx[16],
+        m17 = mtx[17],
+        m18 = mtx[18],
+        m19 = mtx[19];
 
     var R, G, B, A;
     var i = 0;
@@ -3222,7 +3243,148 @@ ConvolutionFilter.prototype.render = function (cache, matrix, colorTransform, st
 
     return cache;
 };
-var DisplacementMapFilter = function () {};
+/**
+ * @constructor
+ */
+var DisplacementMapFilter = function ()
+{
+    BitmapFilter.call(this);
+
+    // default
+    this._alpha      = 0.0;
+    this._color      = 0;
+    this._componentX = 0;
+    this._componentY = 0;
+    this._mapBitmap  = null;
+    this._mapPoint   = null;
+    this._mode       = "wrap";
+    this._scaleX     = 0.0;
+    this._scaleY     = 0.0;
+
+    var arg = arguments;
+    this.mapBitmap  = arg[0];
+    this.mapPoint   = arg[1];
+    this.componentX = arg[2];
+    this.componentY = arg[3];
+    this.scaleX     = arg[4];
+    this.scaleY     = arg[5];
+    this.mode       = arg[6];
+    this.color      = arg[7];
+    this.alpha      = arg[8];
+};
+
+/**
+ * extends
+ * @type {BitmapFilter}
+ */
+DisplacementMapFilter.prototype = Object.create(BitmapFilter.prototype);
+DisplacementMapFilter.prototype.constructor = DisplacementMapFilter;
+
+/**
+ * properties
+ */
+Object.defineProperties(DisplacementMapFilter.prototype, {
+    mapBitmap: {
+        get: function () {
+            return this._mapBitmap;
+        },
+        set: function (mapBitmap) {
+            this._mapBitmap = mapBitmap;
+        }
+    },
+    mapPoint: {
+        get: function () {
+            return this._mapPoint;
+        },
+        set: function (mapPoint) {
+            this._mapPoint = mapPoint;
+        }
+    },
+    componentX: {
+        get: function () {
+            return this._componentX;
+        },
+        set: function (componentX) {
+            if (!this.$isNaN(componentX)) {
+                this._componentX = componentX;
+            }
+        }
+    },
+    componentY: {
+        get: function () {
+            return this._componentY;
+        },
+        set: function (componentY) {
+            if (!this.$isNaN(componentY)) {
+                this._componentY = componentY;
+            }
+        }
+    },
+    scaleX: {
+        get: function () {
+            return this._scaleX;
+        },
+        set: function (scaleX) {
+            if (!this.$isNaN(scaleX)) {
+                this._scaleX = scaleX;
+            }
+        }
+    },
+    scaleY: {
+        get: function () {
+            return this._scaleY;
+        },
+        set: function (scaleY) {
+            if (!this.$isNaN(scaleY)) {
+                this._scaleY = scaleY;
+            }
+        }
+    },
+    mode: {
+        get: function () {
+            return this._mode;
+        },
+        set: function (mode) {
+            this._mode = mode;
+        }
+    },
+    color: {
+        get: function () {
+            return this._color;
+        },
+        set: function (color) {
+            if (!this.$isNaN(color)) {
+                this._color = color;
+            }
+        }
+    },
+    alpha: {
+        get: function () {
+            return this._alpha;
+        },
+        set: function (alpha) {
+            if (!this.$isNaN(alpha)) {
+                this._alpha = alpha;
+            }
+        }
+    }
+});
+
+/**
+ * @param cache
+ * @param matrix
+ * @param colorTransform
+ * @param stage
+ * @returns {*}
+ */
+DisplacementMapFilter.prototype.render = function (cache, matrix, colorTransform, stage)
+{
+    return cache;
+};
+
+/**
+ * @constructor
+ */
 var DisplacementMapFilterMode = function () {};
 DisplacementMapFilterMode.prototype.CLAMP  = "clamp";
 DisplacementMapFilterMode.prototype.COLOR  = "color";
@@ -4356,7 +4518,20 @@ GradientGlowFilter.prototype.render = function (cache, matrix, colorTransform, s
 
     return synCtx;
 };
-var ShaderFilter = function () {};
+/**
+ * @constructor
+ */
+var ShaderFilter = function (shader)
+{
+    BitmapFilter.call(this);
+
+    // default
+    this._bottomExtension = 0;
+    this._leftExtension   = 0;
+    this._rightExtension  = 0;
+    this._shader          = shader;
+    this._topExtension    = 0;
+};
 
 /**
  * extends
@@ -4364,6 +4539,64 @@ var ShaderFilter = function () {};
  */
 ShaderFilter.prototype = Object.create(BitmapFilter.prototype);
 ShaderFilter.prototype.constructor = ShaderFilter;
+
+/**
+ * properties
+ */
+Object.defineProperties(ShaderFilter.prototype, {
+    topExtension: {
+        get: function () {
+            return this._topExtension;
+        },
+        set: function (topExtension) {
+            if (!this.$isNaN(topExtension)) {
+                this._topExtension = topExtension;
+            }
+
+        }
+    },
+    leftExtension: {
+        get: function () {
+            return this._leftExtension;
+        },
+        set: function (leftExtension) {
+            if (!this.$isNaN(leftExtension)) {
+                this._leftExtension = leftExtension;
+            }
+
+        }
+    },
+    rightExtension: {
+        get: function () {
+            return this._rightExtension;
+        },
+        set: function (rightExtension) {
+            if (!this.$isNaN(rightExtension)) {
+                this._rightExtension = rightExtension;
+            }
+
+        }
+    },
+    bottomExtension: {
+        get: function () {
+            return this._bottomExtension;
+        },
+        set: function (bottomExtension) {
+            if (!this.$isNaN(bottomExtension)) {
+                this._bottomExtension = bottomExtension;
+            }
+
+        }
+    },
+    shader: {
+        get: function () {
+            return this._shader;
+        },
+        set: function (shader) {
+            this._shader = shader;
+        }
+    }
+});
 
 /**
  * @param cache
@@ -8172,6 +8405,11 @@ var ActionScriptVersion = function () {};
 
 ActionScriptVersion.prototype.ACTIONSCRIPT2 = 2;
 ActionScriptVersion.prototype.ACTIONSCRIPT3 = 3;
+var BitmapDataChannel = function () {};
+BitmapDataChannel.prototype.ALPHA = 8;
+BitmapDataChannel.prototype.BLUE  = 4;
+BitmapDataChannel.prototype.GREEN = 2;
+BitmapDataChannel.prototype.RED   = 1;
 /*jshint bitwise: false*/
 /**
  * @constructor
@@ -21033,10 +21271,6 @@ ActionScript3.prototype.ActionCallPropVoid = function (stack, index, argCount)
         obj = _this.stage;
     }
 
-    if (this.id==151) {
-        console.log(obj, params,this)
-    }
-
     if (func) {
         func.apply(obj, params);
     }
@@ -22061,9 +22295,6 @@ ActionScript3.prototype.ActionInitProperty = function (stack, index)
     var value = stack.pop();
     var prop = this.names[index];
     var obj = stack.pop();
-    if (this.id==148) {
-        console.log(prop, obj, this)
-    }
     if (obj) {
         if (obj instanceof DisplayObject) {
             obj.setProperty(prop, value);
@@ -28712,7 +28943,7 @@ SwfTag.prototype.parseDoABC = function (tagType, length)
     var classCount = 0 | ABCBitIO.getU30();
     obj.instance   = [];
     obj.class      = [];
-    console.log(classCount)
+    console.log(classCount);
     if (classCount) {
         // instance_info
         var instance = [];
@@ -28721,7 +28952,7 @@ SwfTag.prototype.parseDoABC = function (tagType, length)
             instance[i] = this.ABCInstanceInfo(ABCBitIO);
             i = 0 | i + 1;
         }
-        console.log(instance)
+        console.log(instance);
         obj.instance = instance;
 
         // class_info
@@ -30424,9 +30655,9 @@ Util.prototype.$vtc = new VectorToCanvas();
  */
 var CacheStore = function ()
 {
-    this.pool    = [];
-    this.store   = [];
-    this.size    = 73400320;
+    this.pool  = [];
+    this.store = [];
+    this.size  = 73400320;
 };
 
 /**
@@ -30538,11 +30769,13 @@ CacheStore.prototype.generateKey = function (id, matrix, cxForm)
     }
 
     // colorTransform
-    var c0 = this.$sqrt(cxForm[0] * cxForm[0] + cxForm[4] * cxForm[4]);
-    var c1 = this.$sqrt(cxForm[1] * cxForm[1] + cxForm[5] * cxForm[5]);
-    var c2 = this.$sqrt(cxForm[2] * cxForm[2] + cxForm[6] * cxForm[6]);
-    var c3 = this.$sqrt(cxForm[3] * cxForm[3] + cxForm[7] * cxForm[7]);
-    var cx = this.$sqrt(c0 * c1 + c2 * c3);
+    var c0  = this.$sqrt(cxForm[0] * cxForm[0] + cxForm[4] * cxForm[4]);
+    var c1  = this.$sqrt(cxForm[1] * cxForm[1] + cxForm[5] * cxForm[5]);
+    var c2  = this.$sqrt(cxForm[2] * cxForm[2] + cxForm[6] * cxForm[6]);
+    var c3  = this.$sqrt(cxForm[3] * cxForm[3] + cxForm[7] * cxForm[7]);
+    var c01 = this.$sqrt(c0 * c0 + c1 * c1);
+    var c23 = this.$sqrt(c2 * c2 + c3 * c3);
+    var cx  = this.$sqrt(c01 * c01 + c23 * c23);
 
     return id + "_" + this.$sqrt(m * m + cx * cx);
 };
